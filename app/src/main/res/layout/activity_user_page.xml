@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserPage.UserPageActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/person_avatar"
+                    android:id="@+id/userPageAvatar"/>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarUserPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    app:menu="@menu/bottom_nav_menu"
+                    app:popupTheme="@style/AppTheme.PopupMenu"
+                    android:background="@color/transparent"
+                    app:theme="@style/AppTheme.Toolbar"
+                    />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+
+                <Button
+                    android:id="@+id/messageBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/secondary_button"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Написать"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/purple"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/inviteUserBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/primary_button"
+                    android:layout_marginRight="8dp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
+                    android:textSize="16sp"
+                    android:text="Пригласить" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/userPortfolioBtn"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="false"
+                            android:backgroundTint="@color/white"
+                            android:text="Портфолио" />
+
+
+                        <Button
+                            android:id="@+id/userCollaborationBtn"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="false"
+                            android:backgroundTint="@color/white"
+                            android:text="Коллаборация" />
+
+                        <Button
+                            android:id="@+id/userActiveBtn"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="false"
+                            android:backgroundTint="@color/white"
+                            android:text="Активные" />
+                    </LinearLayout>
+            </HorizontalScrollView>
+            <FrameLayout
+                android:id="@+id/userPageFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

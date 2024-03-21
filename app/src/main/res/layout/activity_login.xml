@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Auth.LoginActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/authButton">
+
+        <EditText
+            android:id="@+id/loginEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/secondary_button"
+            android:hint="Логин"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            />
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/secondary_button"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/forgetPasswordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="240dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/roboto_medium"
+            android:minHeight="48dp"
+            android:text="Забыли пароль?"
+            android:textColor="@color/purple"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/authButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_above="@+id/continueTextView"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/inactive_button"
+        android:enabled="false"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Войти"
+        android:textColor="@color/white" />
+    <TextView
+        android:id="@+id/continueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_above="@+id/loginBtns"
+        android:text="Или продолжите через"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/light_grey"
+        android:textSize="16sp"/>
+
+    <!-- Horizontal LinearLayout for social buttons -->
+    <LinearLayout
+        android:id="@+id/loginBtns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="48dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Google button -->
+        <ImageButton
+            android:id="@+id/googleBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/google_icon"
+            android:contentDescription="Google"
+            />
+
+        <!-- Facebook button -->
+        <ImageButton
+            android:id="@+id/facebookBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/facebook_icon"
+            android:contentDescription="Facebook"/>
+
+        <!-- Apple ID button -->
+        <ImageButton
+            android:id="@+id/appleBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            android:src="@drawable/apple"
+            android:contentDescription="Apple"/>
+    </LinearLayout>
+
+</RelativeLayout>

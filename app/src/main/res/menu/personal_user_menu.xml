@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/editProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Редактировать"/>
+    <item
+        android:id="@+id/editBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Изменить обложку"/>
+    <item
+        android:id="@+id/editAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Изменить аватар"/>
+    <item
+        android:id="@+id/share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Поделиться"/>
+    <item
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Выйти" />
+</menu>

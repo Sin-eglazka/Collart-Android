@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/projectImageView"
+            app:shapeAppearanceOverlay="@style/RoundedBackgroundImage"
+
+            android:src="@drawable/black_picture"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="4dp"
+            />
+
+
+        <TextView
+            android:id="@+id/projectNameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Project Name"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4sp"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:id="@+id/projectSpecialistView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Project Specialist"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8sp"
+            android:textSize="20sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+
+        <TextView
+            android:id="@+id/shortDescriptionView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Что требуется: "
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4sp"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/experienceProjectView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опыт работы: "
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4sp"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/programsProjectView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Программы: "
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4sp"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/clickableUserFromProject"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4sp">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/authorImageView"
+                app:shapeAppearanceOverlay="@style/RoundedAvatarImage"
+                android:src="@drawable/facebook_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                />
+
+            <TextView
+                android:id="@+id/authorNameView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:text="Author"
+                android:textSize="16sp"
+                android:layout_marginEnd="16dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

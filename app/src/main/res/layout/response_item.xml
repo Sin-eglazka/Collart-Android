@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="8dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    app:shapeAppearanceOverlay="@style/RoundedBackgroundImage"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/corner_radius"
+        android:elevation="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/projectImageView"
+            app:shapeAppearanceOverlay="@style/RoundedBackgroundImage"
+
+            android:src="@drawable/black_picture"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="8dp"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/authorInviteImageView"
+                app:shapeAppearanceOverlay="@style/RoundedAvatarImage"
+                android:src="@drawable/facebook_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                />
+
+            <TextView
+                android:id="@+id/authorInviteView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:text="This is a multiline TextView. You can add multiple lines of text here."
+                android:textSize="19sp"
+                android:textColor="@color/black"
+                android:maxLines="100"
+                android:layout_marginEnd="16dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/rejectResponseBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/secondary_button"
+                android:fontFamily="@font/roboto_regular"
+                android:text="Отклонить"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="8dp"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/acceptResponseBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/primary_button"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Принять" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

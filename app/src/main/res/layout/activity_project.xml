@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Projects.ProjectActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarProjectPage"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            app:menu="@menu/project_menu"
+            app:popupTheme="@style/AppTheme.PopupMenu"
+            android:background="@color/transparent"
+            app:theme="@style/AppTheme.Toolbar"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/projectSpecialistFind"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="Специалист" />
+
+                <LinearLayout
+                    android:id="@+id/clickableUserFromProjectPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/authorImageView"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:padding="4dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/facebook_icon"
+                        app:shapeAppearanceOverlay="@style/RoundedAvatarImage"
+                        app:strokeColor="@color/black"
+                        app:strokeWidth="2dp" />
+
+                    <TextView
+                        android:id="@+id/authorNameView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center_vertical"
+                        android:text="Author"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/projectImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Картинка проекта"
+                    android:src="@drawable/black_picture" />
+
+                <TextView
+                    android:id="@+id/projectNameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text="Название" />
+
+                <TextView
+                    android:id="@+id/shortDescriptionProject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Что требуется:" />
+
+                <TextView
+                    android:id="@+id/experienceMainProjectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Опыт работы: " />
+
+                <TextView
+                    android:id="@+id/programsMainProjectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Программы" />
+
+                <TextView
+                    android:id="@+id/descriptionMainProjectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="О проекте" />
+
+                <TextView
+                    android:id="@+id/dateProjectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Дата" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/sendMessageProjectBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/secondary_button"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="Написать"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"
+                        android:textColor="@color/purple"
+                        android:textStyle="bold"/>
+
+                    <Button
+                        android:id="@+id/joinProjectButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/primary_button"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="16dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="Откликнуться" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Portfolio.CreatePortfolioActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarCreatePortfolioPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/project_menu"
+        android:layout_alignParentTop="true"
+        app:popupTheme="@style/AppTheme.PopupMenu"
+        android:background="@color/transparent"
+        app:theme="@style/AppTheme.Toolbar"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/createPortfolioBtn"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/toolbarCreatePortfolioPage">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/namePortfolioView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Название проекта"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+
+            <EditText
+                android:id="@+id/descriptionPortfolioView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Описание"
+                android:maxLines="5"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+
+
+                <TextView
+                    android:id="@+id/imagePortfolioView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/inactive_edittext"
+                    android:hint="Выберите обложку"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24" />
+
+                <ImageView
+                    android:id="@+id/imageUploadedView"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone"/>
+
+
+            <TextView
+                android:id="@+id/filesPortfolioView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Выберите файлы"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/createPortfolioBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_button"
+        android:textColor="@color/white"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:text="Добавить"
+        android:textAllCaps="false"/>
+</RelativeLayout>

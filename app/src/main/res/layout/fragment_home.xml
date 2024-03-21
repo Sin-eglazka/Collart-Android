@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPage.Home.HomeFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/filterBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="8dp"
+                android:background="@color/white"
+                android:src="@drawable/baselist_icon"
+                android:contentDescription="Фильтры"
+                />
+            <android.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:queryHint="Поиск"
+                android:iconifiedByDefault="false"
+                />
+
+        </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/homeNavMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/white"
+            app:itemTextAppearanceActive="@style/BottomNavActiveTextStyle"
+            app:itemTextAppearanceInactive="@style/BottomNavInactiveTextStyle"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/home_menu">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleHomeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

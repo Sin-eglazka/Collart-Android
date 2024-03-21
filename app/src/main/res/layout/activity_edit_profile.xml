@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PersonalPage.EditProfileActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/editProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Редактировать профиль"
+        app:titleTextColor="@color/purple"
+        android:layout_alignParentTop="true"
+        app:popupTheme="@style/AppTheme.PopupMenu"
+        android:background="@color/transparent"
+        app:theme="@style/AppTheme.Toolbar"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/updateUserBtn"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/editProfile">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/emailEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:background="@drawable/secondary_button"
+                android:hint="Почта"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+            <EditText
+                android:id="@+id/nameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:background="@drawable/secondary_button"
+                android:hint="Имя"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+            <EditText
+                android:id="@+id/surnameView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:background="@drawable/secondary_button"
+                android:hint="Фамилия"
+                android:maxLines="5"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/descriptionView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/secondary_button"
+                android:hint="Описание"
+                android:maxLines="5"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+
+            <Spinner
+                android:id="@+id/experienceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/secondary_button"
+                android:hint="Опыт работы"
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24"
+                app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24"
+                />
+
+            <TextView
+                android:id="@+id/programsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/secondary_button"
+                android:hint="Программы"
+                android:layout_marginTop="8dp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24"
+                app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:hint="Хотите быть видимым в списке специалистов?"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"/>
+            <RadioGroup
+                android:id="@+id/searchableGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/searchTrueButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Да"
+                    android:checked="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:buttonTint="@color/purple"
+                    android:fontFamily="@font/roboto_regular"/>
+
+                <RadioButton
+                    android:id="@+id/searchFalseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Нет"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:buttonTint="@color/purple"
+                    android:fontFamily="@font/roboto_regular"
+                    />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/firstProfession"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Выберите специальность"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24" />
+
+            <TextView
+                android:id="@+id/tvAddSecondaryProfession"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="Добавить специальность"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/secondProfession"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:enabled="false"
+                android:hint="Выберите доп. специальность"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24" />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Изменить пароль"
+                android:inputType="textPassword"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="32dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/updateUserBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_button"
+        android:textColor="@color/white"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:text="Изменить"
+        android:textAllCaps="false"/>
+</RelativeLayout>

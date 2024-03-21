@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Collart" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
+        <item name="android:colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/black</item>
+
+    </style>
+
+        <style name="Theme.CollartActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+            <item name="android:colorPrimary">@color/white</item>
+            <item name="titleTextColor">@color/black</item>
+            <item name="colorButtonNormal">@color/black</item>
+            <item name="android:titleTextColor">@color/black</item>
+            <item name="android:textColorPrimary">@color/black</item>
+
+        </style>
+
+</resources>
