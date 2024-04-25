@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 object CurrentUser{
-    var user: User? = null
+    var user: User = User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
     var token: String = ""
 }
 

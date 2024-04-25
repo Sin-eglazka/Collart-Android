@@ -7,18 +7,21 @@
         android:layout_height="wrap_content"
         android:title="Главная страница"
         android:icon="@drawable/home_icon"/>
+
     <item
         android:id="@+id/messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="Уведомления"
         android:icon="@drawable/notifiaction_icon"/>
+
     <item
         android:id="@+id/chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="Чат"
+        android:title="Сообщения"
         android:icon="@drawable/chat_icon"/>
+
     <item
         android:id="@+id/personalPage"
         android:layout_width="wrap_content"

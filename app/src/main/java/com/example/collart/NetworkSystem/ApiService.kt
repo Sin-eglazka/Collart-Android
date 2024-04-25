@@ -3,6 +3,8 @@ package com.example.collart.NetworkSystem
 import com.example.collart.Auth.User
 import com.example.collart.Auth.LoginRequest
 import com.example.collart.Auth.RegisterUserRequest
+import com.example.collart.Chat.Chat
+import com.example.collart.Chat.Message
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -16,6 +18,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+
 
 interface ApiService {
 
@@ -72,25 +75,43 @@ interface ApiService {
         @Part("tools[]") tools: List<RequestBody>
     ): Response<ResponseBody>
 
-    @GET("search/filteredOrders")
-    suspend fun getAllOrders(@Header("Authorization") authorization: String): Response<List<AllOrdersResponse>>
 
-    @GET("tab/active")
-    suspend fun getMyActiveOrders(@Header("Authorization") authorization: String): Response<List<AllOrdersResponse>>
+    @Headers("Content-Type: application/json")
+    @POST("search/filteredOrders")
+    suspend fun getFilteredOrders(
+        @Header("Authorization") authorization: String,
+        @Body request: FilterRequest
+    ): Response<List<OrderResponse>>
 
-    @GET("tab/collaborations")
-    suspend fun getMyCollaborationOrders(@Header("Authorization") authorization: String): Response<List<AllOrdersResponse>>
+    @Headers("Content-Type: application/json")
+    @POST("search/filteredOrders")
+    suspend fun getAllOrders(
+        @Header("Authorization") authorization: String
+    ): Response<List<OrderResponse>>
 
-    @GET("tab/favorites")
-    suspend fun getMyFavoriteOrders(@Header("Authorization") authorization: String): Response<List<AllOrdersResponse>>
+    @GET("tab/active/{userId}")
+    suspend fun getActiveOrders(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<OrderResponse>>
+
+    @GET("tab/collaborations/{userId}")
+    suspend fun getCollaborationOrders(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<OrderResponse>>
 
     @GET("orders/myOrders/{orderId}")
-    suspend fun getOrder(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<AllOrdersResponse>
+    suspend fun getOrder(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<OrderResponse>
 
     // specialists module
 
-    @GET("/search/users/all")
-    suspend fun getAllSpecialists(@Header("Authorization") authorization: String): Response<List<SpecialistResponse>>
+    @Headers("Content-Type: application/json")
+    @POST("search/filteredUsers")
+    suspend fun getFilteredSpecialists(
+        @Header("Authorization") authorization: String,
+        @Body request: FilterRequest
+    ): Response<List<SpecialistResponse>>
+
+    @Headers("Content-Type: application/json")
+    @POST("search/filteredUsers")
+    suspend fun getAllSpecialists(
+        @Header("Authorization") authorization: String
+    ): Response<List<SpecialistResponse>>
 
     @GET("users/{userId}")
     suspend fun getSpecialist(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<User>
@@ -134,9 +155,51 @@ interface ApiService {
         @Part files: List<MultipartBody.Part>
     ): Response<ResponseBody>
 
-    @GET("tab/portfolio")
-    suspend fun getMyPortfolios(@Header("Authorization") authorization: String): Response<List<Portfolio>>
+    @GET("tab/portfolio/{userId}")
+    suspend fun getPortfolios(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<Portfolio>>
 
+    // favorite module
+
+    @GET("tab/favorites/{userId}")
+    suspend fun getFavoriteOrders(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<OrderResponse>>
+
+    @POST("orders/addOrderToFavorite/{orderId}")
+    suspend fun addOrderToFavorite(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<Void>
+
+
+    // chat module
+
+    @Multipart
+    @POST("messages/send")
+    @JvmSuppressWildcards
+    suspend fun sendMessage(
+        @Header("Authorization") authorization: String,
+        @Part("senderID") senderID: RequestBody,
+        @Part("receiverID") receiverID: RequestBody,
+        @Part("message") message: RequestBody,
+        @Part("isRead") isRead: RequestBody,
+        @Part files: List<MultipartBody.Part>
+    ): Response<Message>
+
+    @GET("messages/chats/{userId}")
+    suspend fun getChats(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<Chat>>
+
+
+    @Headers("Content-Type: application/json")
+    @POST("messages/between")
+    suspend fun getChatMessages(
+            @Header("Authorization") authorization: String,
+            @Body request: ChatRequest
+        ): Response<List<Message>>
+
+    @Multipart
+    @POST("messages/markRead")
+    @JvmSuppressWildcards
+    suspend fun readMessages(
+        @Header("Authorization") authorization: String,
+        @Part("senderID") senderID: RequestBody,
+        @Part("receiverID") receiverID: RequestBody,
+    ): Response<Void>
 }
 
 data class LoginResponse(val token: String)

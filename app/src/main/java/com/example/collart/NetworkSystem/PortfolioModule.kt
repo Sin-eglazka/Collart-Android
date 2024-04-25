@@ -1,8 +1,5 @@
 package com.example.collart.NetworkSystem
 
-import com.example.collart.Auth.User
-import com.example.collart.MainPage.Home.Projects.Experience
-import com.example.collart.MainPage.Home.Projects.Project
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -71,10 +68,10 @@ object PortfolioModule {
         }
     }
 
-    suspend fun getMyPortfolios(token: String): List<Portfolio>{
+    suspend fun getMyPortfolios(token: String, userId: String): List<Portfolio>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = NetworkClient.apiService.getMyPortfolios("Bearer $token")
+                val response = NetworkClient.apiService.getPortfolios("Bearer $token", userId)
 
                 if (response.isSuccessful) {
                     if (response.body() != null){

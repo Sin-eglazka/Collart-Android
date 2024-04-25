@@ -17,19 +17,28 @@
         android:theme="@style/Theme.Collart"
         tools:targetApi="31">
         <activity
-            android:name=".Portfolio.CreatePortfolioActivity"
+            android:name=".Chat.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PersonalPage.Portfolio.PortfolioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainPage.FiltersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PersonalPage.Portfolio.CreatePortfolioActivity"
             android:exported="false" />
         <activity
             android:name=".PersonalPage.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateOrder.CreateOrderActivity"
+            android:name=".PersonalPage.CreateOrder.CreateOrderActivity"
             android:exported="false" />
         <activity
-            android:name=".Projects.ProjectActivity"
+            android:name=".MainPage.Home.Projects.ProjectActivity"
             android:exported="false" />
         <activity
-            android:name=".UserPage.UserPageActivity"
+            android:name=".MainPage.Home.Specialists.UserPage.UserPageActivity"
             android:exported="false" />
         <activity
             android:name=".MainPage.MainPageActivity"
@@ -37,18 +46,18 @@
         <activity
             android:name=".Auth.RegisterActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".OnBoarding.MainActivity"
             android:theme="@style/Theme.CollartActionBar" />
         <activity
             android:name=".Auth.LoginActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".OnBoarding.MainActivity"
             android:theme="@style/Theme.CollartActionBar" />
         <activity
             android:name=".OnBoarding.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".OnBoarding.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

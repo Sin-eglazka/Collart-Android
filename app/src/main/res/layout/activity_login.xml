@@ -47,8 +47,8 @@
             android:id="@+id/forgetPasswordTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="240dp"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="end"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/roboto_medium"
@@ -81,6 +81,7 @@
         android:layout_marginTop="16dp"
         android:layout_above="@+id/loginBtns"
         android:text="Или продолжите через"
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/roboto_regular"
         android:textColor="@color/light_grey"
@@ -88,6 +89,7 @@
 
     <!-- Horizontal LinearLayout for social buttons -->
     <LinearLayout
+
         android:id="@+id/loginBtns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,7 +97,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="48dp"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        >
 
         <!-- Google button -->
         <ImageButton
@@ -107,6 +110,7 @@
             android:layout_marginRight="8dp"
             android:src="@drawable/google_icon"
             android:contentDescription="Google"
+            android:visibility="gone"
             />
 
         <!-- Facebook button -->
@@ -118,6 +122,7 @@
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:src="@drawable/facebook_icon"
+            android:visibility="gone"
             android:contentDescription="Facebook"/>
 
         <!-- Apple ID button -->
@@ -128,6 +133,7 @@
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:src="@drawable/apple"
+            android:visibility="gone"
             android:contentDescription="Apple"/>
     </LinearLayout>
 

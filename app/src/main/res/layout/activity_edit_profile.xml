@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         app:title="Редактировать профиль"
         app:titleTextColor="@color/purple"
+        app:titleMarginTop="12dp"
         android:layout_alignParentTop="true"
         app:popupTheme="@style/AppTheme.PopupMenu"
         android:background="@color/transparent"

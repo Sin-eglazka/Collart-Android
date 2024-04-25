@@ -83,6 +83,7 @@ class ActiveProjectsAdapter(private val context: Context, private val items: Lis
 
         holder.titleProjectView.text = project.name
 
+
         if (type == ProjectType.ChooseActiveProject) {
             if (position == selectedItemPosition) {
                 holder.checkedProjectView.setImageResource(R.drawable.check)

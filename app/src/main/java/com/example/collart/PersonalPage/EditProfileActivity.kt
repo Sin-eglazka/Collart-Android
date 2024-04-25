@@ -1,5 +1,7 @@
 package com.example.collart.PersonalPage
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
@@ -15,16 +17,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.Auth.CurrentUser.token
 import com.example.collart.Auth.User
 import com.example.collart.MainPage.Home.Projects.Experience
 import com.example.collart.NetworkSystem.SkillModule
 import com.example.collart.NetworkSystem.ToolsModule
 import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
-import com.example.collart.ui.DropDownClickListener
+import com.example.collart.Tools.UI.DropDownClickListener
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -192,6 +192,8 @@ class EditProfileActivity : AppCompatActivity() {
             val response = UserModule.updateUser(CurrentUser.token, email, name, surname, searchable, experience, password, description, tools, skills, null, null)
             if (response == "ok"){
                 Toast.makeText(this@EditProfileActivity, "Ok", Toast.LENGTH_LONG).show()
+                val resultIntent = Intent()
+                setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
             else{

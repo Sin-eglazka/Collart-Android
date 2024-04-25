@@ -1,4 +1,4 @@
-package com.example.collart.Portfolio
+package com.example.collart.PersonalPage.Portfolio
 
 import android.app.Activity
 import android.content.Intent
@@ -16,9 +16,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.FileConverter.FileConverter
+import com.example.collart.Tools.FileConverter.FileConverter
 import com.example.collart.NetworkSystem.PortfolioModule
-import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

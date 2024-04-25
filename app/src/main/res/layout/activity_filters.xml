@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPage.FiltersActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarFilterPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@color/purple"
+        app:titleMarginTop="12dp"
+        android:layout_alignParentTop="true"
+        app:popupTheme="@style/AppTheme.PopupMenu"
+        android:background="@color/transparent"
+        app:theme="@style/AppTheme.Toolbar"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/aaplyFilters"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/toolbarFilterPage">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/filterSkillView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Специальности"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24" />
+
+            <TextView
+                android:id="@+id/filterProgramsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Программы"
+                android:layout_marginTop="8dp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24"
+                app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/filterExperienceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/inactive_edittext"
+                android:hint="Опыт"
+                android:layout_marginTop="8dp"
+                app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24"
+                app:drawableStartCompat="@drawable/baseline_arrow_drop_down_24"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/aaplyFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_button"
+        android:textColor="@color/white"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:text="Применить"
+        android:textAllCaps="false"/>
+</RelativeLayout>

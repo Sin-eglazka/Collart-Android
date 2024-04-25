@@ -5,13 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Portfolio.CreatePortfolioActivity">
+    tools:context=".PersonalPage.Portfolio.CreatePortfolioActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarCreatePortfolioPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/project_menu"
+        app:title="Создать портфолио"
+        app:titleMarginTop="12dp"
+        app:titleTextColor="@color/purple"
         android:layout_alignParentTop="true"
         app:popupTheme="@style/AppTheme.PopupMenu"
         android:background="@color/transparent"

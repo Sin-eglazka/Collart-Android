@@ -30,18 +30,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.collart.Auth.CurrentUser
 import com.example.collart.Auth.CurrentUser.token
-import com.example.collart.CreateOrder.CreateOrderActivity
-import com.example.collart.FileConverter.FileConverter
-import com.example.collart.MainActivity
+import com.example.collart.Auth.CurrentUser.user
+import com.example.collart.Auth.User
+import com.example.collart.Auth.UserData
+import com.example.collart.PersonalPage.CreateOrder.CreateOrderActivity
+import com.example.collart.Tools.FileConverter.FileConverter
+import com.example.collart.OnBoarding.MainActivity
 import com.example.collart.MainPage.Home.Projects.Project
 import com.example.collart.MainPage.MainPageActivity
 import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.Portfolio
 import com.example.collart.NetworkSystem.PortfolioModule
 import com.example.collart.NetworkSystem.UserModule
-import com.example.collart.Portfolio.CreatePortfolioActivity
-import com.example.collart.Portfolio.PortfolioViewAdapter
-import com.example.collart.Projects.ProjectActivity
+import com.example.collart.PersonalPage.Portfolio.CreatePortfolioActivity
+import com.example.collart.PersonalPage.Portfolio.PortfolioViewAdapter
+import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -85,6 +88,16 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
                 uploadPortfolioProjects()
             }
         }
+
+    private val editActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            GlobalScope.launch((Dispatchers.Main)) {
+                CurrentUser.user = UserModule.getCurrentUser(token)
+                fillViews()
+            }
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -214,7 +227,8 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
                     val intent = Intent(context, EditProfileActivity::class.java)
 
-                    context?.startActivity(intent)
+                    editActivityResultLauncher.launch(intent)
+                    //context?.startActivity(intent)
 
                     true
                 }
@@ -274,7 +288,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
                 }
                 R.id.logout -> {
                     token = ""
-                    CurrentUser.user = null
+                    CurrentUser.user = User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
                     TokenManager.clearToken(requireContext())
                     val context: Context? = activity
                     val intent = Intent(context, MainActivity::class.java)
@@ -298,6 +312,8 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
 
         val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.menu_button)
+        toolbarButton[0].setTextColor(activeTextColor)
+        toolbarButton[0].background = drawable
 
         for (button in toolbarButton){
             button.setOnClickListener{
@@ -363,7 +379,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
     private fun uploadActiveProjects(){
         GlobalScope.launch(Dispatchers.Main) {
-            activeProjects = OrderModule.getMyOrders(token).toMutableList()
+            activeProjects = OrderModule.getMyOrders(token, user.userData.id).toMutableList()
             if (isAdded && context != null) {
                 activeProjectsAdapter = ActiveProjectsAdapter(
                     requireContext(),
@@ -379,7 +395,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
     private fun uploadFavoritesProjects(){
         GlobalScope.launch(Dispatchers.Main) {
-            favoriteProjects = OrderModule.getMyFavoriteOrders(token).toMutableList()
+            favoriteProjects = OrderModule.getMyFavoriteOrders(token, user.userData.id).toMutableList()
             if (isAdded && context != null) {
                 activeProjectsAdapter = ActiveProjectsAdapter(
                     requireContext(),
@@ -395,7 +411,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
     private fun uploadCollaborationProjects(){
         GlobalScope.launch(Dispatchers.Main) {
-            collaborationProjects = OrderModule.getMyCollaborationOrders(token).toMutableList()
+            collaborationProjects = OrderModule.getMyCollaborationOrders(token, user.userData.id).toMutableList()
             if (isAdded && context != null) {
                 activeProjectsAdapter = ActiveProjectsAdapter(
                     requireContext(),
@@ -411,7 +427,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
     private fun uploadPortfolioProjects(){
         GlobalScope.launch(Dispatchers.Main) {
-            portfolios = PortfolioModule.getMyPortfolios(token).toMutableList()
+            portfolios = PortfolioModule.getMyPortfolios(token, user.userData.id).toMutableList()
             if (isAdded && context != null) {
                 val adapter = PortfolioViewAdapter(
                     requireContext(),

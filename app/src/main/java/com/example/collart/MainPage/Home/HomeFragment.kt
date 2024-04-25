@@ -1,6 +1,7 @@
 package com.example.collart.MainPage.Home
 
 import ActiveProjectsAdapter
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
+import com.example.collart.MainPage.FiltersActivity
 import com.example.collart.MainPage.Home.Projects.Project
 import com.example.collart.MainPage.Home.Projects.ProjectsViewAdapter
 import com.example.collart.MainPage.Home.Projects.SpecialistsViewAdapter
@@ -21,9 +25,9 @@ import com.example.collart.MainPage.Home.Specialists.Specialist
 import com.example.collart.NetworkSystem.InteractionModule
 import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.UserModule
-import com.example.collart.Projects.ProjectActivity
+import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.R
-import com.example.collart.UserPage.UserPageActivity
+import com.example.collart.MainPage.Home.Specialists.UserPage.UserPageActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
@@ -38,10 +42,15 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var homeNavMenuView: BottomNavigationView
+    private lateinit var filterButton: ImageButton
 
     private lateinit var projects: MutableList<Project>
     private lateinit var specialists: MutableList<Specialist>
     private var myProjects: MutableList<Project> = emptyList<Project>().toMutableList()
+
+    private var filterSkills = arrayOf<String>()
+    private var filterTools = arrayOf<String>()
+    private var filterExperience = arrayOf<String>()
 
 
     private var searchProjects: MutableList<Project> = mutableListOf()
@@ -62,6 +71,20 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
+
+    private val filterActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            filterSkills = data?.getStringArrayExtra("skills") as Array<String>
+            filterTools = data.getStringArrayExtra("tools") as Array<String>
+            filterExperience = data.getStringArrayExtra("experiences") as Array<String>
+            getSpecialists()
+            getProjects()
+
+
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         searchView = view.findViewById(R.id.searchView)
         recyclerView = view.findViewById(R.id.recycleHomeView)
@@ -71,6 +94,11 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         projectAdapter.setOnItemClickListener(this)
         recyclerView.adapter = projectAdapter
 
+        filterButton = view.findViewById(R.id.filterBtn)
+        filterButton.setOnClickListener {
+            val intent = Intent(requireContext(), FiltersActivity::class.java)
+            filterActivityResultLauncher.launch(intent)
+        }
 
         //first initialization
         projects = mutableListOf()
@@ -87,8 +115,6 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
             when(it.itemId){
 
                 R.id.projects -> {
-                    searchProjects.clear()
-                    searchProjects.addAll(projects)
                     projectAdapter = ProjectsViewAdapter(searchProjects, requireContext())
                     projectAdapter.setOnItemClickListener(this)
                     recyclerView.adapter = projectAdapter
@@ -97,8 +123,6 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
                 }
 
                 R.id.specialists -> {
-                    searchSpecialists.clear()
-                    searchSpecialists.addAll(specialists)
                     specAdapter = SpecialistsViewAdapter(searchSpecialists, requireContext())
                     specAdapter.setOnItemClickListener(this)
                     recyclerView.adapter = specAdapter
@@ -199,7 +223,7 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         recycleMyProjects.adapter = adapter
 
         GlobalScope.launch(Dispatchers.Main) {
-            myProjects = OrderModule.getMyOrders(CurrentUser.token).toMutableList()
+            myProjects = OrderModule.getMyOrders(CurrentUser.token, CurrentUser.user.userData.id).toMutableList()
             adapter = ActiveProjectsAdapter(requireContext(), myProjects, ProjectType.ChooseActiveProject)
             recycleMyProjects.adapter = adapter
         }
@@ -256,33 +280,28 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         }
     }
 
-    // TODO: Add filters
     private fun getProjects() {
         val token = CurrentUser.token
         GlobalScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
-                val orders = OrderModule.getAllOrders(token)
-                if (orders != null) {
+                val orders = OrderModule.getAllOrders(token, filterSkills, filterTools, filterExperience)
                     projects = orders.toMutableList()
                     searchProjects = projects.toMutableList()
                     projectAdapter = ProjectsViewAdapter(searchProjects, requireContext())
                     projectAdapter.setOnItemClickListener(this@HomeFragment)
                     recyclerView.adapter = projectAdapter
-                }
             }
         }
     }
 
-    // TODO: Add filters
     private fun getSpecialists(){
         val token = CurrentUser.token
         GlobalScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
-                val specialistsResponse = UserModule.getAllSpecialist(token)
-                if (specialistsResponse != null) {
+                val specialistsResponse = UserModule.getAllSpecialist(token, filterSkills, filterTools, filterExperience)
                     specialists = specialistsResponse.toMutableList()
                     searchSpecialists = specialists.toMutableList()
-                }
+
             }
         }
     }

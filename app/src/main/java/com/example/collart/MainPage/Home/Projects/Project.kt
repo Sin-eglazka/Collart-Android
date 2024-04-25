@@ -9,6 +9,7 @@ enum class Experience(val stringValue: String){
     MORE_THAN_5_YEARS("Более 5 лет");
 
     companion object {
+
         fun fromString(value: String): Experience {
             when (value) {
                 "no_experience" -> {

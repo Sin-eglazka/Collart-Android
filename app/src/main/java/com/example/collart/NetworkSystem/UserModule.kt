@@ -78,33 +78,39 @@ object UserModule {
         }
     }
 
-    suspend fun getCurrentUser(token: String): User?{
+    suspend fun getCurrentUser(token: String): User{
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getCurrentUser("Bearer $token")
 
                 if (response.isSuccessful) {
-                    response.body()
-
+                    response.body() ?: User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorJson = JSONObject(errorBody)
                     val reason = errorJson.optString("reason")
-                    null
+                    User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
                 }
             } catch (e: Exception) {
                 // Handle exception
                 e.printStackTrace()
                 val error = "Register failed: ${e.message}"
-                null
+                User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
             }
         }
     }
 
-    suspend fun getAllSpecialist(token: String): List<Specialist>{
+    suspend fun getAllSpecialist(token: String, skills: Array<String>, tools: Array<String>, experience: Array<String>): List<Specialist>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getAllSpecialists("Bearer $token")
+                val response = if (skills.isEmpty() && tools.isEmpty() && experience.isEmpty()) {
+                    apiService.getAllSpecialists("Bearer $token")
+                }
+                else{
+                    apiService.getFilteredSpecialists("Bearer $token",
+                        FilterRequest(skills.toList(), tools.toList(), experience.toList())
+                    )
+                }
 
                 if (response.isSuccessful) {
                     val responseSpecialists = response.body()
@@ -206,8 +212,8 @@ object UserModule {
             passwordRequestBody = RequestBody.create(MediaType.parse("text/plain"), passwordHash)
         }
 
-        // TODO: would be optional need null
-          // Convert list of tools to list of RequestBody
+
+        // Convert list of tools to list of RequestBody
         var toolsRequestBody: List<RequestBody>? = null
         if (tools != null) {
             if (tools.size > 0){

@@ -1,4 +1,4 @@
-package com.example.collart.FileConverter
+package com.example.collart.Tools.FileConverter
 
 import android.content.Context
 import android.net.Uri
@@ -20,9 +20,9 @@ class FileConverter {
                     val photoFile = createTemporalFileFrom(inputStream, context, filename)
                     filePath = photoFile!!.path
                 } catch (e: FileNotFoundException) {
-                    // log
+                    e.printStackTrace()
                 } catch (e: IOException) {
-                    // log
+                    e.printStackTrace()
                 } finally {
                     try {
                         inputStream!!.close()

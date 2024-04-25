@@ -1,4 +1,4 @@
-package com.example.collart.ui
+package com.example.collart.Tools.UI
 
 import android.app.Dialog
 import android.content.Context

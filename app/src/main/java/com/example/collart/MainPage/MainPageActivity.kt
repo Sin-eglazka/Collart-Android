@@ -2,8 +2,8 @@ package com.example.collart.MainPage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils.replace
 import androidx.fragment.app.Fragment
+import com.example.collart.Chat.AllChats.ChatsFragment
 import com.example.collart.MainPage.Home.HomeFragment
 import com.example.collart.NotificationsPage.NotificationFragment
 import com.example.collart.PersonalPage.ProfileFragment
@@ -14,7 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainPageActivity : AppCompatActivity() {
 
     companion object{
-        private var fragmentIndex = 0
+        private var fragmentIndex = 1
     }
 
     private lateinit var binding: ActivityMainPageBinding
@@ -33,11 +33,16 @@ class MainPageActivity : AppCompatActivity() {
 
         val notificationFragment = NotificationFragment()
 
-        if (fragmentIndex == 0) {
+        val chatsFragment = ChatsFragment()
+
+        if (fragmentIndex == 1) {
             setCurrentFragment(homeFragment)
         }
-        if (fragmentIndex == 1) {
+        if (fragmentIndex == 2) {
             setCurrentFragment(notificationFragment)
+        }
+        if (fragmentIndex == 3) {
+            setCurrentFragment(chatsFragment)
         }
         if (fragmentIndex == 4) {
             setCurrentFragment(userPageFragment)
@@ -47,12 +52,7 @@ class MainPageActivity : AppCompatActivity() {
 
                 R.id.home -> {
                     setCurrentFragment(homeFragment)
-                    fragmentIndex = 0
-                }
-
-                R.id.personalPage -> {
-                    setCurrentFragment(userPageFragment)
-                    fragmentIndex = 4
+                    fragmentIndex = 1
                 }
 
                 R.id.messages -> {
@@ -61,7 +61,13 @@ class MainPageActivity : AppCompatActivity() {
                 }
 
                 R.id.chat -> {
+                    setCurrentFragment(chatsFragment)
+                    fragmentIndex = 3
+                }
 
+                R.id.personalPage -> {
+                    setCurrentFragment(userPageFragment)
+                    fragmentIndex = 4
                 }
 
             }

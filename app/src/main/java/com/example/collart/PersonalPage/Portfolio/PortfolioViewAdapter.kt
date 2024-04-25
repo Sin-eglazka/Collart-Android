@@ -1,4 +1,4 @@
-package com.example.collart.Portfolio
+package com.example.collart.PersonalPage.Portfolio
 
 import ProjectType
 import android.content.Context
@@ -20,9 +20,9 @@ class PortfolioViewAdapter(private val context: Context, private val items: List
         fun onItemClick(position: Int)
     }
 
-    private var listener: PortfolioViewAdapter.OnItemClickListener? = null
+    private var listener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener: PortfolioViewAdapter.OnItemClickListener?) {
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
         this.listener = listener
     }
 

@@ -2,12 +2,9 @@ package com.example.collart.OnBoarding
 
 import OnboardingAdapter
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.collart.MainActivity
 import com.example.collart.R
 import com.example.collart.databinding.ActivityOnboardingBinding
 
@@ -57,7 +54,8 @@ class OnboardingActivity : AppCompatActivity() {
                     val child = circles.getChildAt(i)
                     child.background = circleInactive
                 }
-                circles.getChildAt(currentPage).background = circleActive
+                val child = circles.getChildAt(currentPage)
+                child.background = circleActive
                 binding.viewPager.setCurrentItem(currentPage, true)
 
             } else {

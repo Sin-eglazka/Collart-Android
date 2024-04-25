@@ -29,19 +29,33 @@ data class Order(
     @SerializedName("title") val title: String
 ) : Serializable
 
-data class AllOrdersResponse(
+data class OrderResponse(
     @SerializedName("user") val userData: UserData,
     @SerializedName("tools") val tools: List<String>,
     @SerializedName("order") val order: Order,
     @SerializedName("skill") val skill: Skill?
 ) : Serializable
 
+data class FilterRequest(
+    val skills: List<String>,
+    val tools: List<String>,
+    val experience: List<String>
+)
+
 object OrderModule {
 
-    suspend fun getAllOrders(token: String): List<Project>{
+    suspend fun getAllOrders(token: String, skills: Array<String>, tools: Array<String>, experience: Array<String>): List<Project>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getAllOrders("Bearer $token")
+
+                val response = if (skills.isEmpty() && tools.isEmpty() && experience.isEmpty()) {
+                    apiService.getAllOrders("Bearer $token")
+                }
+                else{
+                    apiService.getFilteredOrders("Bearer $token",
+                        FilterRequest(skills.toList(), tools.toList(), experience.toList())
+                    )
+                }
 
                 if (response.isSuccessful) {
                     val responseProjects = response.body()
@@ -76,16 +90,16 @@ object OrderModule {
             } catch (e: Exception) {
                 // Handle exception
                 e.printStackTrace()
-                val error = "Register failed: ${e.message}"
+                val error = "Get orders failed: ${e.message}"
                 emptyList()
             }
         }
     }
 
-    suspend fun getMyOrders(token: String): List<Project>{
+    suspend fun getMyOrders(token: String, userId: String): List<Project>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getMyActiveOrders("Bearer $token")
+                val response = apiService.getActiveOrders("Bearer $token", userId)
 
                 if (response.isSuccessful) {
                     val responseProjects = response.body()
@@ -120,10 +134,10 @@ object OrderModule {
         }
     }
 
-    suspend fun getMyCollaborationOrders(token: String): List<Project>{
+    suspend fun getMyCollaborationOrders(token: String, userId: String): List<Project>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getMyCollaborationOrders("Bearer $token")
+                val response = apiService.getCollaborationOrders("Bearer $token", userId)
 
                 if (response.isSuccessful) {
                     val responseProjects = response.body()
@@ -158,10 +172,10 @@ object OrderModule {
         }
     }
 
-    suspend fun getMyFavoriteOrders(token: String): List<Project>{
+    suspend fun getMyFavoriteOrders(token: String, userId: String): List<Project>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getMyFavoriteOrders("Bearer $token")
+                val response = apiService.getFavoriteOrders("Bearer $token", userId)
 
                 if (response.isSuccessful) {
                     val responseProjects = response.body()
@@ -196,7 +210,7 @@ object OrderModule {
         }
     }
 
-    suspend fun getOrder(token: String, orderId: String): AllOrdersResponse?{
+    suspend fun getOrder(token: String, orderId: String): OrderResponse?{
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getOrder("Bearer $token", orderId)
@@ -215,6 +229,29 @@ object OrderModule {
                 e.printStackTrace()
                 val error = "Register failed: ${e.message}"
                 null
+            }
+        }
+    }
+
+    suspend fun addOrderToFavorite(token: String, orderId: String): String{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.addOrderToFavorite("Bearer $token", orderId)
+
+                if (response.isSuccessful) {
+                    "ok"
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    reason
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                error
             }
         }
     }

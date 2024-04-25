@@ -1,7 +1,6 @@
-package com.example.collart
+package com.example.collart.OnBoarding
 
 import TokenManager
-import com.example.collart.OnBoarding.OnboardingActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

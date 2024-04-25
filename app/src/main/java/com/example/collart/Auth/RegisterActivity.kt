@@ -21,7 +21,7 @@ import com.example.collart.NetworkSystem.NetworkClient
 import com.example.collart.NetworkSystem.SkillModule
 import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
-import com.example.collart.ui.DropDownClickListener
+import com.example.collart.Tools.UI.DropDownClickListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

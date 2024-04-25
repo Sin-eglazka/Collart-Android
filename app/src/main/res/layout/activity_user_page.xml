@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserPage.UserPageActivity">
+    tools:context=".MainPage.Home.Specialists.UserPage.UserPageActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,7 +107,11 @@
                 android:id="@+id/userPageFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/projectsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
             </FrameLayout>
 
 

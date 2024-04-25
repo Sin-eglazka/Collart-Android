@@ -1,8 +1,6 @@
 package com.example.collart.NetworkSystem
 
 import com.example.collart.Auth.User
-import com.example.collart.Auth.UserData
-import com.example.collart.Auth.UserSkill
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,7 +26,7 @@ data class PostInteraction(
 
 data class InteractionResponse(
     @SerializedName("sender") val sender: User,
-    @SerializedName("order") val order: AllOrdersResponse,
+    @SerializedName("order") val order: OrderResponse,
     @SerializedName("getter") val getter: User,
     @SerializedName("status") val status: String,
     @SerializedName("id") val id: String

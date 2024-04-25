@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateOrder.CreateOrderActivity">
+    tools:context=".PersonalPage.CreateOrder.CreateOrderActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarCreateOrderPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/project_menu"
+        app:titleMarginTop="12dp"
+        app:titleTextColor="@color/purple"
         android:layout_alignParentTop="true"
         app:popupTheme="@style/AppTheme.PopupMenu"
         android:background="@color/transparent"

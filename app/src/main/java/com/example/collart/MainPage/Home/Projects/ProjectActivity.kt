@@ -1,8 +1,7 @@
-package com.example.collart.Projects
+package com.example.collart.MainPage.Home.Projects
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,26 +10,26 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.MainPage.Home.Projects.Experience
-import com.example.collart.NetworkSystem.AllOrdersResponse
+import com.example.collart.Chat.Chat
+import com.example.collart.Chat.ChatActivity
+import com.example.collart.MainPage.Home.Specialists.UserPage.UserPageActivity
 import com.example.collart.NetworkSystem.InteractionModule
+import com.example.collart.NetworkSystem.OrderModule
+import com.example.collart.NetworkSystem.OrderResponse
 import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
-import com.example.collart.UserPage.UserPageActivity
+import com.example.collart.Tools.TimeConverter.TimeConverter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.util.Date
 
 class ProjectActivity : AppCompatActivity() {
 
-    private lateinit var project: AllOrdersResponse
+    private lateinit var project: OrderResponse
 
     private lateinit var projectSpecialistFind: TextView
     private lateinit var authorImageView: ImageView
@@ -43,6 +42,7 @@ class ProjectActivity : AppCompatActivity() {
     private lateinit var descriptionMainProjectView: TextView
     private lateinit var dateProjectView: TextView
     private lateinit var joinProjectButton: Button
+    private lateinit var sendMessageBtn: Button
     private lateinit var clickUserView: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +53,13 @@ class ProjectActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("")
+        supportActionBar?.title = ""
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
         }
 
-        project = intent.getSerializableExtra("project") as AllOrdersResponse
+        project = intent.getSerializableExtra("project") as OrderResponse
 
         projectSpecialistFind = findViewById(R.id.projectSpecialistFind)
         projectSpecialistFind.text = project.skill!!.nameRu
@@ -68,8 +68,6 @@ class ProjectActivity : AppCompatActivity() {
         clickUserView.setOnClickListener{
             onUserClick()
         }
-
-        // TODO: add click to user profile
 
         val urlAvatar = project.order.owner.userPhoto.replace("http://", "https://")
         authorImageView = findViewById(R.id.authorImageView)
@@ -102,11 +100,11 @@ class ProjectActivity : AppCompatActivity() {
         experienceMainProjectView.text = "Опыт: " + Experience.fromString(project.order.experience).stringValue
 
         programsMainProjectView = findViewById(R.id.programsMainProjectView)
-        var programs: String = "Программы: "
+        var programs = "Программы: "
         project.tools.forEach{
-            programs += it + ", "
+            programs += "$it, "
         }
-        if (project.tools.size == 0){
+        if (project.tools.isEmpty()){
             programs += "-"
         }
         else{
@@ -119,14 +117,37 @@ class ProjectActivity : AppCompatActivity() {
 
         dateProjectView = findViewById(R.id.dateProjectView)
 
-        val date: String = getDateTime(project.order.dataStart) + "-" + getDateTime(project.order.dataEnd)
+        val date: String = TimeConverter.GetDateTime(project.order.dataStart) + "-" + TimeConverter.GetDateTime(project.order.dataEnd)
         dateProjectView.text = date
 
         joinProjectButton = findViewById(R.id.joinProjectButton)
         joinProjectButton.setOnClickListener {
             onJoinButtonClick()
         }
-        // TODO: add click listener to join and write + add files placeholders
+
+        sendMessageBtn = findViewById(R.id.sendMessageProjectBtn)
+        sendMessageBtn.setOnClickListener {
+            onSendMessageClick()
+        }
+        // TODO: add click listener write + add files placeholders
+    }
+
+    private fun onSendMessageClick(){
+        GlobalScope.launch(Dispatchers.Main) {
+
+            val userResponse = UserModule.getSpecialist(CurrentUser.token, project.order.owner.id)
+            if (userResponse == null) {
+                Toast.makeText(this@ProjectActivity, "Error on server", Toast.LENGTH_LONG).show()
+                return@launch
+            }
+
+            val chat = Chat(false, "", userResponse.userData.userPhoto, userResponse.userData.id, "", 0, userResponse.userData.name + " " + userResponse.userData.surname)
+            val intent = Intent(this@ProjectActivity, ChatActivity::class.java)
+
+            intent.putExtra("Chat", chat)
+
+            startActivity(intent)
+        }
     }
 
     private fun onUserClick(){
@@ -146,9 +167,9 @@ class ProjectActivity : AppCompatActivity() {
         }
     }
 
-    fun onJoinButtonClick() {
+    private fun onJoinButtonClick() {
 
-        val userId: String = CurrentUser.user?.userData?.id.toString()
+        val userId: String = CurrentUser.user.userData.id
         GlobalScope.launch(Dispatchers.Main) {
             val response = InteractionModule.createInteraction(
                 CurrentUser.token,
@@ -165,19 +186,6 @@ class ProjectActivity : AppCompatActivity() {
         }
     }
 
-    private fun getDateTime(s: String): String {
-        return try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-            val date = dateFormat.parse(s)
-            val timestamp = date.time
-            val sdf = SimpleDateFormat("MM/dd/yyyy")
-            val netDate = Date(timestamp)
-            sdf.format(netDate)
-        } catch (e: Exception) {
-            s
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.project_menu, menu)
         return true
@@ -185,20 +193,25 @@ class ProjectActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            /*R.id.action_item1 -> {
+            R.id.hide -> {
                 // Handle action item 1 click
                 return true
             }
-            R.id.action_item2 -> {
+            R.id.share -> {
                 // Handle action item 2 click
                 return true
             }
-            R.id.action_item3 -> {
-                // Handle action item 3 click
+            R.id.like -> {
+                GlobalScope.launch(Dispatchers.Main) {
+                    val response = OrderModule.addOrderToFavorite(CurrentUser.token, project.order.id)
+                    if (response != "ok"){
+                        Toast.makeText(this@ProjectActivity, response, Toast.LENGTH_LONG).show()
+                        return@launch
+                    }
+                }
                 return true
             }
-            else -> return super.onOptionsItemSelected(item)*/
+            else -> return super.onOptionsItemSelected(item)
         }
-        return true
     }
 }
