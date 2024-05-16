@@ -1,21 +1,15 @@
 package com.example.collart.MainPage.Home.Projects
 
 import android.content.Context
-import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.RenderProcessGoneDetail
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.collart.Auth.CurrentUser
-import com.example.collart.MainPage.Home.HomeFragment
 import com.example.collart.NetworkSystem.InteractionResponse
-import com.example.collart.NotificationsPage.NotificationFragment
 import com.example.collart.NotificationsPage.OnInteractionClickListener
 import com.example.collart.R
 
@@ -24,7 +18,7 @@ class InvitesViewAdapter(private val invites: List<InteractionResponse>, private
     private var listener: OnInteractionClickListener? = null
 
     inner class InviteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val projectView: View = itemView.findViewById(R.id.inviteProjectView)
+        private val projectView: View = itemView.findViewById(R.id.inviteProjectView)
         val projectImageView: ImageView = projectView.findViewById(R.id.projectImageView)
         val projectNameView: TextView = projectView.findViewById(R.id.projectNameView)
         val projectSpecialistView: TextView = projectView.findViewById(R.id.projectSpecialistView)

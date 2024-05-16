@@ -1,9 +1,6 @@
 package com.example.collart.MainPage.Home.Projects
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.text.TextUtils.replace
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.example.collart.Auth.CurrentUser
 import com.example.collart.Auth.CurrentUser.token
 import com.example.collart.NetworkSystem.UserModule
@@ -36,7 +29,7 @@ class ProjectsViewAdapter(private val projects: List<Project>, private val conte
     private var listener: OnItemClickListener? = null
 
     inner class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val projectView: View = itemView.findViewById(R.id.projectView)
+        private val projectView: View = itemView.findViewById(R.id.projectView)
         val projectImageView: ImageView = projectView.findViewById(R.id.projectImageView)
         val projectNameView: TextView = projectView.findViewById(R.id.projectNameView)
         val projectSpecialistView: TextView = projectView.findViewById(R.id.projectSpecialistView)
@@ -98,7 +91,7 @@ class ProjectsViewAdapter(private val projects: List<Project>, private val conte
         holder.joinProjectBtn.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 if (CurrentUser.user == null){
-                    CurrentUser.user = UserModule.getCurrentUser(CurrentUser.token)
+                    CurrentUser.user = UserModule.getCurrentUser(token)
                 }
                 if (CurrentUser.user == null){
                     Toast.makeText(context, "Server error", Toast.LENGTH_SHORT).show()

@@ -2,13 +2,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.collart.MainPage.Home.Projects.Project
-import com.example.collart.MainPage.Home.Projects.ProjectsViewAdapter
 import com.example.collart.R
 
 enum class ProjectType{
@@ -25,12 +23,12 @@ class ActiveProjectsAdapter(private val context: Context, private val items: Lis
         fun onItemClick(position: Int, type: ProjectType)
     }
 
-    private var listener: ActiveProjectsAdapter.OnItemClickListener? = null
+    private var listener: OnItemClickListener? = null
 
     var selectedItemPosition: Int = RecyclerView.NO_POSITION
 
 
-    fun setOnItemClickListener(listener: ActiveProjectsAdapter.OnItemClickListener?) {
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
         this.listener = listener
     }
 

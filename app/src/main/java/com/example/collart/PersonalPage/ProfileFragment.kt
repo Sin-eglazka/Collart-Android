@@ -29,27 +29,25 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.collart.Auth.CurrentUser
 import com.example.collart.Auth.CurrentUser.token
 import com.example.collart.Auth.CurrentUser.user
 import com.example.collart.Auth.User
 import com.example.collart.Auth.UserData
-import com.example.collart.PersonalPage.CreateOrder.CreateOrderActivity
-import com.example.collart.Tools.FileConverter.FileConverter
-import com.example.collart.OnBoarding.MainActivity
 import com.example.collart.MainPage.Home.Projects.Project
+import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.MainPage.MainPageActivity
 import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.Portfolio
 import com.example.collart.NetworkSystem.PortfolioModule
 import com.example.collart.NetworkSystem.UserModule
+import com.example.collart.OnBoarding.MainActivity
+import com.example.collart.PersonalPage.CreateOrder.CreateOrderActivity
 import com.example.collart.PersonalPage.Portfolio.CreatePortfolioActivity
-import com.example.collart.PersonalPage.Portfolio.PortfolioViewAdapter
-import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.PersonalPage.Portfolio.PortfolioActivity
+import com.example.collart.PersonalPage.Portfolio.PortfolioViewAdapter
 import com.example.collart.R
+import com.example.collart.Tools.FileConverter.FileConverter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -95,16 +93,12 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
         if (result.resultCode == Activity.RESULT_OK) {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 if (isAdded && context != null) {
-                    CurrentUser.user = UserModule.getCurrentUser(token)
+                    user = UserModule.getCurrentUser(token)
                     fillViews()
                 }
             }
         }
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -118,8 +112,8 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
     }
 
     private fun fillViews(){
-        val urlImage: String = CurrentUser.user?.userData?.cover?.replace("http://", "https://")!!
-        val urlAvatar = CurrentUser.user?.userData?.userPhoto?.replace("http://", "https://")!!
+        val urlImage: String = user.userData.cover.replace("http://", "https://")!!
+        val urlAvatar = user.userData.userPhoto.replace("http://", "https://")!!
 
         Glide.with(requireContext())
             .load(urlImage)
@@ -135,11 +129,11 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
             .centerCrop()
             .into(avatarUserView)
 
-        usernameView.text = CurrentUser.user!!.userData.name + " " + CurrentUser.user!!.userData.surname
+        usernameView.text = user.userData.name + " " + user.userData.surname
 
         var skillsText = ""
 
-        CurrentUser.user!!.skills.forEach{
+        user.skills.forEach{
             skillsText += it.nameRu + ", "
         }
         if (skillsText.length > 0){
@@ -148,8 +142,8 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
         userProfession.text = skillsText
 
 
-        if (CurrentUser.user!!.userData.searchable) {
-            userEmailView.text = CurrentUser.user!!.userData.email
+        if (user.userData.searchable) {
+            userEmailView.text = user.userData.email
         }
         else{
             userEmailView.text = ""
@@ -171,11 +165,11 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
         uploadActiveProjects()
 
-        if (CurrentUser.user == null){
+        if (user == null){
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 if (isAdded && context != null) {
-                    CurrentUser.user = UserModule.getCurrentUser(token)
-                    if (CurrentUser.user == null) {
+                    user = UserModule.getCurrentUser(token)
+                    if (user == null) {
                         Toast.makeText(
                             requireContext(),
                             "Incorrect user credentials",
@@ -301,7 +295,7 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
                 }
                 R.id.logout -> {
                     token = ""
-                    CurrentUser.user = User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
+                    user = User(UserData("", false, "", "", "", "", "", "", ""), emptyList(), emptyList())
                     TokenManager.clearToken(requireContext())
                     val context: Context? = activity
                     val intent = Intent(context, MainActivity::class.java)

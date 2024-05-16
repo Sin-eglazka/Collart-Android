@@ -17,14 +17,12 @@ class MainPageActivity : AppCompatActivity() {
         private var fragmentIndex = 1
     }
 
-    private lateinit var binding: ActivityMainPageBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.itemIconTintList = null
 
 
         val homeFragment = HomeFragment()

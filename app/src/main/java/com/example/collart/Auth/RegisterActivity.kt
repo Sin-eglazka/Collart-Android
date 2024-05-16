@@ -41,34 +41,34 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var firstProfessionView: TextView
     private lateinit var secondProfessionView: TextView
 
-    lateinit var editTexts:List<EditText>;
+    lateinit var editTexts:List<EditText>
 
     private var isSecondaryProfessionAdded = false
     private var skills: List<String> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.collart.R.layout.activity_register)
+        setContentView(R.layout.activity_register)
 
         supportActionBar?.title = "Регистрация"
         supportActionBar?.apply {
-            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@RegisterActivity, com.example.collart.R.color.white)))
-            setHomeAsUpIndicator(com.example.collart.R.drawable.baseline_arrow_back_24)
+            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@RegisterActivity, R.color.white)))
+            setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24)
 
         }
 
 
-        etName = findViewById(com.example.collart.R.id.etName)
-        etSurname = findViewById(com.example.collart.R.id.etSurname)
-        etMail = findViewById(com.example.collart.R.id.etMail)
-        etPassword = findViewById(com.example.collart.R.id.etPassword)
-        etRepeatPassword = findViewById(com.example.collart.R.id.etRepeatPassword)
-        secondaryProfessionContainer = findViewById(com.example.collart.R.id.container)
-        btnRegister = findViewById(com.example.collart.R.id.btnRegister)
-        tvError = findViewById(com.example.collart.R.id.tvError)
-        tvAddSecondaryProfession = findViewById(com.example.collart.R.id.tvAddSecondaryProfession)
-        firstProfessionView = findViewById(com.example.collart.R.id.firstProfession)
-        secondProfessionView = findViewById(com.example.collart.R.id.secondProfession)
+        etName = findViewById(R.id.etName)
+        etSurname = findViewById(R.id.etSurname)
+        etMail = findViewById(R.id.etMail)
+        etPassword = findViewById(R.id.etPassword)
+        etRepeatPassword = findViewById(R.id.etRepeatPassword)
+        secondaryProfessionContainer = findViewById(R.id.container)
+        btnRegister = findViewById(R.id.btnRegister)
+        tvError = findViewById(R.id.tvError)
+        tvAddSecondaryProfession = findViewById(R.id.tvAddSecondaryProfession)
+        firstProfessionView = findViewById(R.id.firstProfession)
+        secondProfessionView = findViewById(R.id.secondProfession)
 
         GlobalScope.launch(Dispatchers.Main) {
             skills = SkillModule.getAllSkillsRu()
@@ -119,24 +119,24 @@ class RegisterActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         override fun afterTextChanged(s: Editable?) {
-            val backgroundDrawable = if (s?.length ?: 0 > 0) {
-                resources.getDrawable(R.drawable.secondary_button, null)
+            val backgroundDrawable = if ((s?.length ?: 0) > 0) {
+                R.drawable.secondary_button
             } else {
-                resources.getDrawable(R.drawable.inactive_edittext, null)
+                R.drawable.inactive_edittext
             }
 
 
             var isAllFilled = true
             editTexts.forEach{
                 if (it.text.isNotEmpty()){
-                    it.background = backgroundDrawable
+                    it.setBackgroundResource(backgroundDrawable)
                 }
                 else{
                     isAllFilled = false
                 }
             }
             if (firstProfessionView.text.isNotEmpty()){
-                firstProfessionView.background = backgroundDrawable
+                firstProfessionView.setBackgroundResource(backgroundDrawable)
             }
             else{
                 isAllFilled = false
@@ -144,14 +144,14 @@ class RegisterActivity : AppCompatActivity() {
 
             if (isSecondaryProfessionAdded){
                 if (secondProfessionView.text.isNotEmpty()){
-                    secondProfessionView.background = backgroundDrawable
+                    secondProfessionView.setBackgroundResource(backgroundDrawable)
                 }
                 else{
                     isAllFilled = false
                 }
             }
-            btnRegister.setEnabled(isAllFilled)
-            btnRegister.setBackgroundResource(if (isAllFilled) com.example.collart.R.drawable.primary_button else com.example.collart.R.drawable.inactive_button)
+            btnRegister.isEnabled = isAllFilled
+            btnRegister.setBackgroundResource(if (isAllFilled) R.drawable.primary_button else R.drawable.inactive_button)
         }
     }
 
@@ -177,8 +177,8 @@ class RegisterActivity : AppCompatActivity() {
             tvError.visibility = GONE
             tvError.text = messageError
 
-            var name: String = etName.text.toString()
-            var surname: String = etSurname.text.toString()
+            val name: String = etName.text.toString()
+            val surname: String = etSurname.text.toString()
 
 
             GlobalScope.launch(Dispatchers.Main) {
@@ -191,8 +191,8 @@ class RegisterActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                var first = firstProfessionView.text.toString()
-                var sec = secondProfessionView.text.toString()
+                val first = firstProfessionView.text.toString()
+                val sec = secondProfessionView.text.toString()
                 var userSkills: List<String> = listOf(first)
                 if (isSecondaryProfessionAdded){
                     userSkills = listOf(first, sec)
@@ -231,7 +231,7 @@ class RegisterActivity : AppCompatActivity() {
 
         tvAddSecondaryProfession.visibility = GONE
         secondProfessionView.visibility = VISIBLE
-        secondProfessionView.setEnabled(true)
+        secondProfessionView.isEnabled = true
         val professionClickListener = DropDownClickListener(this@RegisterActivity, skills) { selectedItem ->
             // Handle item selection here
             secondProfessionView.text = selectedItem

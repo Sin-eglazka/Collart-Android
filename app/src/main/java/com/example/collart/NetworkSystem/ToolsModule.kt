@@ -1,7 +1,5 @@
 package com.example.collart.NetworkSystem
 
-import com.example.collart.MainPage.Home.Projects.Experience
-import com.example.collart.MainPage.Home.Projects.Project
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

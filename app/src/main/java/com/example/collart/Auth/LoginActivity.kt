@@ -8,8 +8,6 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,14 +27,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var authButton: Button
-    private lateinit var googleButton: ImageButton
-    private lateinit var facebookButton: ImageButton
-    private lateinit var appleIdButton: ImageButton
-    private lateinit var forgetPasswordTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.collart.R.layout.activity_login)
+        setContentView(R.layout.activity_login)
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
         // Find views
@@ -48,8 +42,8 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.title = "Вход"
         supportActionBar?.apply {
-            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@LoginActivity, com.example.collart.R.color.white)))
-            setHomeAsUpIndicator(com.example.collart.R.drawable.baseline_arrow_back_24)
+            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@LoginActivity, R.color.white)))
+            setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24)
 
         }
 
@@ -87,10 +81,10 @@ class LoginActivity : AppCompatActivity() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             // Check if both fields are filled to enable auth button
-            val isLoginFilled: Boolean = loginEditText.text.length > 0
-            val isPasswordFilled: Boolean = passwordEditText.text.length > 0
-            authButton.setEnabled(isLoginFilled && isPasswordFilled)
-            authButton.setBackgroundResource(if (isLoginFilled && isPasswordFilled) com.example.collart.R.drawable.primary_button else com.example.collart.R.drawable.inactive_button)
+            val isLoginFilled: Boolean = loginEditText.text.isNotEmpty()
+            val isPasswordFilled: Boolean = passwordEditText.text.isNotEmpty()
+            authButton.isEnabled = isLoginFilled && isPasswordFilled
+            authButton.setBackgroundResource(if (isLoginFilled && isPasswordFilled) R.drawable.primary_button else R.drawable.inactive_button)
         }
         override fun afterTextChanged(s: Editable?) {}
     }

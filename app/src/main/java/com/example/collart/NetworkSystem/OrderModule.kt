@@ -245,12 +245,8 @@ object OrderModule {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         val isLike = response.body()!!
-                        if (isLike == "true"){
-                            true
-                        }
-                        else{
-                            false
-                        }
+                        isLike == "true"
+
                     }
                     else{
                         false

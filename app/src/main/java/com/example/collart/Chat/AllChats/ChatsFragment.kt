@@ -3,28 +3,23 @@ package com.example.collart.Chat.AllChats
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Looper
 import android.os.Handler
-import androidx.fragment.app.Fragment
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
 import com.example.collart.Chat.Chat
 import com.example.collart.Chat.ChatActivity
-import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.NetworkSystem.ChatModule
-import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.R
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.concurrent.fixedRateTimer
-import java.util.concurrent.Executors
 
 
 class ChatsFragment : Fragment(), ChatsViewAdapter.OnChatClickListener{
@@ -35,10 +30,6 @@ class ChatsFragment : Fragment(), ChatsViewAdapter.OnChatClickListener{
 
     private var chats: MutableList<Chat> = emptyList<Chat>().toMutableList()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

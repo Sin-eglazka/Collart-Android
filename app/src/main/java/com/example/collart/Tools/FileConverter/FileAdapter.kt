@@ -4,10 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.collart.MainPage.Home.Projects.ProjectsViewAdapter
 import com.example.collart.R
 import com.example.collart.Tools.FileConverter.FileConverter
-import java.io.File
 
 class FileAdapter(private val files: List<String>) :
     RecyclerView.Adapter<FileAdapter.FileViewHolder>() {
@@ -18,7 +16,7 @@ class FileAdapter(private val files: List<String>) :
 
     private var listener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener: FileAdapter.OnItemClickListener?) {
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
         this.listener = listener
     }
     inner class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

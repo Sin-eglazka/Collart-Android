@@ -58,7 +58,7 @@ class CreateOrderActivity : AppCompatActivity() {
                 (0 until clipData.itemCount).map { index ->
                     clipData.getItemAt(index).uri
                 }
-            } ?: listOf(result.data?.data).filterNotNull()
+            } ?: listOfNotNull(result.data?.data)
             files = getFilesFromUris(uris)
 
         }
@@ -84,7 +84,7 @@ class CreateOrderActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("Создать заказ")
+        supportActionBar?.title = "Создать заказ"
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -92,7 +92,7 @@ class CreateOrderActivity : AppCompatActivity() {
 
         spinnerExperience = findViewById(R.id.experienceOrderView)
         val states = Experience.entries.map { it.stringValue }
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, states)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, states)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerExperience.adapter = adapter
 
@@ -119,11 +119,11 @@ class CreateOrderActivity : AppCompatActivity() {
 
         dateStartView = findViewById(R.id.dateStartView)
         dateStartView.setOnClickListener{
-            showDatePicker(true);
+            showDatePicker(true)
         }
         dateEndView = findViewById(R.id.dateEndView)
         dateEndView.setOnClickListener {
-            showDatePicker(false);
+            showDatePicker(false)
         }
 
         imageUploaded = findViewById(R.id.imageUploadedView)
@@ -176,7 +176,7 @@ class CreateOrderActivity : AppCompatActivity() {
         return files
     }
 
-    fun getFileNameFromUri(uri: Uri): String? {
+    private fun getFileNameFromUri(uri: Uri): String? {
         val returnCursor: Cursor = contentResolver.query(uri, null, null, null, null)!!
         val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         returnCursor.moveToFirst()
@@ -322,9 +322,9 @@ class CreateOrderActivity : AppCompatActivity() {
         }
     }
 
-    fun getAvailablePrograms(){
+    private fun getAvailablePrograms(){
         GlobalScope.launch(Dispatchers.Main) {
-            var tools = ToolsModule.getAllTools(CurrentUser.token)
+            val tools = ToolsModule.getAllTools(CurrentUser.token)
             programs = tools.map { tool -> tool.name }.toTypedArray()
             selectedPrograms = BooleanArray(programs.size)
         }

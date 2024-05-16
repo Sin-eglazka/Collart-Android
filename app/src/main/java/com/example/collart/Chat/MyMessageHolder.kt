@@ -9,11 +9,11 @@ import com.example.collart.Tools.TimeConverter.TimeConverter
 
 
 class MyMessageHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val messageText: TextView = view.findViewById(R.id.text_gchat_message_me)
-    val date: TextView = view.findViewById(R.id.text_gchat_date_me)
-    val messageDate: TextView = view.findViewById(R.id.text_gchat_timestamp_me)
+    private val messageText: TextView = view.findViewById(R.id.text_gchat_message_me)
+    private val date: TextView = view.findViewById(R.id.text_gchat_date_me)
+    private val messageDate: TextView = view.findViewById(R.id.text_gchat_timestamp_me)
     fun bindView(context: Context, message: Message, needDay: Boolean) {
-        messageText.setText(message.message)
+        messageText.text = message.message
         messageDate.text = TimeConverter.GetTimeOfDate(message.createTime)
         if (needDay) {
             date.visibility = View.VISIBLE

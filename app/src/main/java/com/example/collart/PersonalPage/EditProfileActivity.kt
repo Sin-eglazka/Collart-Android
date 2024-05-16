@@ -71,7 +71,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         spinnerExperience = findViewById(R.id.experienceView)
         val states = Experience.entries.map { it.stringValue }
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, states)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, states)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerExperience.adapter = adapter
 
@@ -113,20 +113,13 @@ class EditProfileActivity : AppCompatActivity() {
             updateUser()
         }
 
-        if (CurrentUser.user != null){
-            fillFields(CurrentUser.user!!)
-        }
+        fillFields(CurrentUser.user)
+
 
     }
 
     private fun updateUser(){
-        val user: User
-        if (CurrentUser.user != null){
-            user = CurrentUser.user!!
-        }
-        else{
-            return
-        }
+        val user = CurrentUser.user
 
         var email: String? = null
         var name: String? = null
@@ -152,11 +145,10 @@ class EditProfileActivity : AppCompatActivity() {
             password = etPassword.text.toString()
         }
         if (radioButtonTrue.isChecked != user.userData.searchable){
-            if (radioButtonTrue.isChecked){
-                searchable = "true"
-            }
-            else{
-                searchable = "false"
+            searchable = if (radioButtonTrue.isChecked){
+                "true"
+            } else{
+                "false"
             }
         }
 
@@ -171,20 +163,20 @@ class EditProfileActivity : AppCompatActivity() {
             tools?.add(programs[programsList[j]])
         }
 
-        var skills: MutableList<String>? = listOf<String>(firstProfessionView.text.toString()).toMutableList()
+        var skills: MutableList<String>? = listOf(firstProfessionView.text.toString()).toMutableList()
         if (isSecondaryProfessionAdded){
-            var secondSkill = secondProfessionView.text.toString()
+            val secondSkill = secondProfessionView.text.toString()
             if (secondSkill != ""){
                 skills?.add(secondSkill)
             }
         }
 
-        var isSkillChange = false;
+        var isSkillChange = false
         if (user.skills.isNotEmpty() && skills?.get(0) != user.skills[0].nameRu && skills?.get(0) != ""){
-            isSkillChange = true;
+            isSkillChange = true
         }
         if (isSecondaryProfessionAdded && (user.skills.size < 2 || user.skills[1].nameRu != skills?.get(1))){
-            isSkillChange = true;
+            isSkillChange = true
         }
 
         if (skills != null) {
@@ -238,9 +230,9 @@ class EditProfileActivity : AppCompatActivity() {
 
     }
 
-    fun getAvailablePrograms(){
+    private fun getAvailablePrograms(){
         GlobalScope.launch(Dispatchers.Main) {
-            var tools = ToolsModule.getAllTools(CurrentUser.token)
+            val tools = ToolsModule.getAllTools(CurrentUser.token)
             programs = tools.map { tool -> tool.name }.toTypedArray()
             selectedPrograms = BooleanArray(programs.size)
         }
@@ -324,7 +316,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         tvAddSecondaryProfession.visibility = GONE
         secondProfessionView.visibility = VISIBLE
-        secondProfessionView.setEnabled(true)
+        secondProfessionView.isEnabled = true
         val professionClickListener = DropDownClickListener(this@EditProfileActivity, skills) { selectedItem ->
             // Handle item selection here
             secondProfessionView.text = selectedItem

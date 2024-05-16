@@ -1,7 +1,6 @@
 package com.example.collart.NotificationsPage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,23 +8,19 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.MainPage.Home.Projects.Experience
 import com.example.collart.MainPage.Home.Projects.InvitesViewAdapter
-import com.example.collart.MainPage.Home.Projects.Project
 import com.example.collart.MainPage.Home.Projects.ResponsesViewAdapter
 import com.example.collart.NetworkSystem.InteractionModule
 import com.example.collart.NetworkSystem.InteractionModule.getResponsesOnMyProjects
 import com.example.collart.NetworkSystem.InteractionResponse
-import com.example.collart.NetworkSystem.Tool
 import com.example.collart.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 interface OnInteractionClickListener {
@@ -49,10 +44,6 @@ class NotificationFragment : Fragment(), OnInteractionClickListener {
 
     private lateinit var responseAdapter: ResponsesViewAdapter
     private lateinit var invitesAdapter: InvitesViewAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -148,7 +139,7 @@ class NotificationFragment : Fragment(), OnInteractionClickListener {
         val token = CurrentUser.token
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
-                responses = InteractionModule.getResponsesOnMyProjects(token).toMutableList()
+                responses = getResponsesOnMyProjects(token).toMutableList()
                 filterByStatus(spinner.selectedItemPosition)
             }
         }

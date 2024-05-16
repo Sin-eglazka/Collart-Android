@@ -43,10 +43,10 @@ class CreatePortfolioActivity : AppCompatActivity() {
             imageUploadedView.visibility = View.VISIBLE
             val path = FileConverter.getImagePathFromInputStreamUri(uri, this@CreatePortfolioActivity, "orderCover.jpg")
             image = path?.let { File(it) }
-            imagePortfolioView.setText(getFileNameFromUri(uri))
+            imagePortfolioView.text = getFileNameFromUri(uri)
         }
         else{
-            imagePortfolioView.setText("")
+            imagePortfolioView.text = ""
             imageUploadedView.visibility = View.GONE
             image = null
         }
@@ -58,7 +58,7 @@ class CreatePortfolioActivity : AppCompatActivity() {
                 (0 until clipData.itemCount).map { index ->
                     clipData.getItemAt(index).uri
                 }
-            } ?: listOf(result.data?.data).filterNotNull()
+            } ?: listOfNotNull(result.data?.data)
             files = getFilesFromUris(uris)
 
         }
@@ -72,7 +72,7 @@ class CreatePortfolioActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("Создать портфолио")
+        supportActionBar?.title = "Создать портфолио"
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -158,7 +158,7 @@ class CreatePortfolioActivity : AppCompatActivity() {
         return files
     }
 
-    fun getFileNameFromUri(uri: Uri): String? {
+    private fun getFileNameFromUri(uri: Uri): String? {
         val returnCursor: Cursor = contentResolver.query(uri, null, null, null, null)!!
         val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         returnCursor.moveToFirst()

@@ -42,7 +42,7 @@ class FiltersActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("Фильтры")
+        supportActionBar?.title = "Фильтры"
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -68,7 +68,7 @@ class FiltersActivity : AppCompatActivity() {
 
         applyBtn = findViewById(R.id.aaplyFilters)
         applyBtn.setOnClickListener {
-            closeActivity();
+            closeActivity()
         }
 
     }
@@ -99,7 +99,7 @@ class FiltersActivity : AppCompatActivity() {
 
     private fun getAvailablePrograms(){
         GlobalScope.launch(Dispatchers.Main) {
-            var tools = ToolsModule.getAllTools(CurrentUser.token)
+            val tools = ToolsModule.getAllTools(CurrentUser.token)
             programs = tools.map { tool -> tool.name }.toTypedArray()
             selectedPrograms = BooleanArray(programs.size)
         }

@@ -3,16 +3,14 @@ package com.example.collart.MainPage.Home.Projects
 import FileAdapter
 import android.Manifest
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View.GONE
 import android.widget.Button
 import android.widget.FrameLayout
@@ -66,7 +64,7 @@ class ProjectActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
     private lateinit var projectAction: ShapeableImageView
     private lateinit var btnAction: FrameLayout
 
-    private var isLiked = false;
+    private var isLiked = false
 
     private val downloadCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {

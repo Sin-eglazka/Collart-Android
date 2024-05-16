@@ -1,6 +1,5 @@
 package com.example.collart.Chat
 
-import com.example.collart.NetworkSystem.Object
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 

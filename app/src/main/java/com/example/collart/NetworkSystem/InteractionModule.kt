@@ -76,7 +76,7 @@ object InteractionModule {
 
                 if (response.isSuccessful) {
                     if (response.body() == null){
-                        emptyList<InteractionResponse>()
+                        emptyList()
                     }
                     else {
                         response.body()!!
@@ -104,7 +104,7 @@ object InteractionModule {
 
                 if (response.isSuccessful) {
                     if (response.body() == null){
-                        emptyList<InteractionResponse>()
+                        emptyList()
                     }
                     else {
                         response.body()!!

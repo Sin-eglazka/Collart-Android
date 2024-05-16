@@ -1,8 +1,9 @@
 package com.example.collart.NetworkSystem
 
-import com.example.collart.Auth.User
+import android.util.Base64
 import com.example.collart.Auth.LoginRequest
 import com.example.collart.Auth.RegisterUserRequest
+import com.example.collart.Auth.User
 import com.example.collart.Auth.UserData
 import com.example.collart.Auth.UserSkill
 import com.example.collart.MainPage.Home.Projects.Experience
@@ -16,11 +17,9 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
-import retrofit2.http.Part
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import android.util.Base64
 
 
 data class SpecialistResponse(
@@ -61,11 +60,11 @@ object UserModule {
         return withContext(Dispatchers.IO) {
             try {
 
-                var experienceString = experience.toStringValue()
+                val experienceString = experience.toStringValue()
 
                 val hashPass = hashPassword(password)
                 val hashRepPas = hashPassword(repeatPassword)
-                val request = RegisterUserRequest(email, hashPass, hashRepPas, name, surname, description, userPhoto, cover, searchable, experienceString, skills, tools);
+                val request = RegisterUserRequest(email, hashPass, hashRepPas, name, surname, description, userPhoto, cover, searchable, experienceString, skills, tools)
                 val response = apiService.register(request)
 
                 if (response.isSuccessful) {
@@ -282,7 +281,7 @@ object UserModule {
         }
     }
 
-    fun hashPassword(password: String ): String {
+    private fun hashPassword(password: String ): String {
         val salt = "9nNnI5dZm3c="
         val digest = MessageDigest.getInstance("SHA-256")
         val hash = digest.digest((password + salt).toByteArray(StandardCharsets.UTF_8))

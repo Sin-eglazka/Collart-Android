@@ -1,6 +1,7 @@
 package com.example.collart.MainPage.Home
 
 import ActiveProjectsAdapter
+import ProjectType
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -21,19 +22,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
 import com.example.collart.MainPage.FiltersActivity
 import com.example.collart.MainPage.Home.Projects.Project
+import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.MainPage.Home.Projects.ProjectsViewAdapter
 import com.example.collart.MainPage.Home.Projects.SpecialistsViewAdapter
 import com.example.collart.MainPage.Home.Specialists.Specialist
+import com.example.collart.MainPage.Home.Specialists.UserPage.UserPageActivity
 import com.example.collart.NetworkSystem.InteractionModule
 import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.UserModule
-import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.R
-import com.example.collart.MainPage.Home.Specialists.UserPage.UserPageActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -62,11 +62,6 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     private lateinit var specAdapter: SpecialistsViewAdapter
 
     private lateinit var filterActivityResultLauncher: ActivityResultLauncher<Intent>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -145,12 +140,12 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val searchText = newText!!.toLowerCase(Locale.getDefault())
+                val searchText = newText!!.lowercase(Locale.getDefault())
                 if (searchText.isNotEmpty()){
                     if (projectBar.isChecked){
                         searchProjects.clear()
                         projects.forEach{
-                            if (it.name.toLowerCase(Locale.getDefault()).contains(searchText)){
+                            if (it.name.lowercase(Locale.getDefault()).contains(searchText)){
                                 searchProjects.add(it)
                             }
                         }
@@ -158,7 +153,7 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
                     if (specialistBar.isChecked){
                         searchSpecialists.clear()
                         specialists.forEach{
-                            if (it.name.toLowerCase(Locale.getDefault()).contains(searchText)){
+                            if (it.name.lowercase(Locale.getDefault()).contains(searchText)){
                                 searchSpecialists.add(it)
                             }
                         }
@@ -250,7 +245,7 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
             if (adapter.selectedItemPosition != RecyclerView.NO_POSITION){
                 val index = adapter.selectedItemPosition
                 if (index < myProjects.size){
-                    val userId: String = CurrentUser.user?.userData?.id.toString()
+                    val userId: String = CurrentUser.user.userData?.id.toString()
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                         if (isAdded && context != null) {
                             val response = InteractionModule.createInteraction(
@@ -282,7 +277,7 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
 
     override fun onJoinButtonClick(position: Int) {
 
-        val userId: String = CurrentUser.user?.userData?.id.toString()
+        val userId: String = CurrentUser.user.userData?.id.toString()
         viewLifecycleOwner.lifecycleScope.launch {
             if (isAdded && context != null) {
                 val response = InteractionModule.createInteraction(

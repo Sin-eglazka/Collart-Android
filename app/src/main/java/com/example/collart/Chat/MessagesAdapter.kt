@@ -3,7 +3,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.Chat.AllChats.ChatsViewAdapter
 import com.example.collart.Chat.Message
 import com.example.collart.Chat.MyMessageHolder
 import com.example.collart.Chat.OtherMessageHolder
@@ -13,7 +12,7 @@ import com.example.collart.Tools.TimeConverter.TimeConverter
 class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val VIEW_TYPE_USER_MESSAGE_ME = 10
     private val VIEW_TYPE_USER_MESSAGE_OTHER = 11
-    private var messages: MutableList<Message>
+    private var messages: MutableList<Message> = ArrayList()
     private var context: Context
 
     interface ReadListener {
@@ -22,11 +21,10 @@ class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     private var listener: ReadListener? = null
     init {
-        messages = ArrayList()
         this.context = context
     }
 
-    fun setOnItemClickListener(listener: MessagesAdapter.ReadListener?) {
+    fun setOnItemClickListener(listener: ReadListener?) {
         this.listener = listener
     }
 
@@ -39,10 +37,7 @@ class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         this.messages.addAll(messages)
         notifyDataSetChanged()
     }
-    fun addFirst(message: Message) {
-        messages.add(message)
-        notifyDataSetChanged()
-    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when(viewType) {
@@ -56,7 +51,7 @@ class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         }
     }
     override fun getItemViewType(position: Int): Int {
-        val message = messages.get(position)
+        val message = messages[position]
         return if (message.sender.id == CurrentUser.user.userData.id) {
             VIEW_TYPE_USER_MESSAGE_ME
         } else {
@@ -65,7 +60,7 @@ class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     }
     override fun getItemCount() = messages.size
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var needDay: Boolean = false
+        var needDay = false
         if (position == 0){
             needDay = true
         }
@@ -73,7 +68,7 @@ class MessagesAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             val currDay = TimeConverter.GetDayOfDate(messages[position].createTime)
             val prevDay = TimeConverter.GetDayOfDate(messages[position - 1].createTime)
             if (currDay != prevDay){
-                needDay = true;
+                needDay = true
             }
         }
         when (holder.itemViewType) {

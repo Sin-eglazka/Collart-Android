@@ -9,19 +9,18 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.collart.NetworkSystem.OrderResponse
 import com.example.collart.NetworkSystem.Portfolio
 import com.example.collart.R
 import com.example.collart.Tools.FileConverter.FileConverter
@@ -54,7 +53,7 @@ class PortfolioActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("")
+        supportActionBar?.title = ""
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -63,7 +62,7 @@ class PortfolioActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
         portfolio = intent.getSerializableExtra("portfolio") as Portfolio
 
         titleView = findViewById(R.id.titleView)
-        titleView.setText(portfolio.name)
+        titleView.text = portfolio.name
 
         imageView = findViewById(R.id.portfolioImage)
         val urlImage: String = portfolio.image.replace("http://", "https://")
@@ -75,7 +74,7 @@ class PortfolioActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
             .into(imageView)
 
         descriptionView = findViewById(R.id.descriptionPortfolioView)
-        descriptionView.setText(portfolio.description)
+        descriptionView.text = portfolio.description
 
         recycleFiles = findViewById(R.id.recycleFileView)
         recycleFiles.layoutManager = LinearLayoutManager(this)

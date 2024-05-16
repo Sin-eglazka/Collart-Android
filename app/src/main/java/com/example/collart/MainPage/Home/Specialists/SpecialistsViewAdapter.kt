@@ -1,7 +1,6 @@
 package com.example.collart.MainPage.Home.Projects
 
 import android.content.Context
-import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
