@@ -62,5 +62,17 @@ class FileConverter {
         private fun createTemporalFile(filename: String, context: Context): File {
             return File(context.externalCacheDir, filename)
         }
+
+        fun extractFileNameFromUrl(url: String): String {
+            val uri = Uri.parse(url)
+            val lastPathSegment = uri.lastPathSegment
+            return if (lastPathSegment != null) {
+                // If the last path segment exists, return it
+                lastPathSegment
+            } else {
+                // If the last path segment is null, return a default file name or handle accordingly
+                ""
+            }
+        }
     }
 }

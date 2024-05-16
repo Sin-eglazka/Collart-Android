@@ -1,21 +1,17 @@
 package com.example.collart.Chat
 
 import MessagesAdapter
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
-import com.example.collart.Auth.User
 import com.example.collart.NetworkSystem.ChatModule
-import com.example.collart.NetworkSystem.ChatModule.sendMessage
 import com.example.collart.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -43,7 +39,7 @@ class ChatActivity : AppCompatActivity(), MessagesAdapter.ReadListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle(chat.userName)
+        supportActionBar?.title = chat.userName
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -82,6 +78,7 @@ class ChatActivity : AppCompatActivity(), MessagesAdapter.ReadListener {
             override fun run() {
                 // Check for new messages from the server
                 checkForNewMessages()
+                readMessages()
                 // Run this runnable again after 1 second
                 handler.postDelayed(this, 1000)
             }
@@ -91,7 +88,7 @@ class ChatActivity : AppCompatActivity(), MessagesAdapter.ReadListener {
     private fun sendMessage()
     {
         val textMessage = editMessage.text.toString()
-        if (!textMessage.isNullOrBlank()){
+        if (textMessage.isNotBlank()){
             GlobalScope.launch(Dispatchers.Main) {
                 val message = ChatModule.sendMessage(
                     CurrentUser.token,
@@ -133,7 +130,7 @@ class ChatActivity : AppCompatActivity(), MessagesAdapter.ReadListener {
 
     override fun readMessages() {
         GlobalScope.launch(Dispatchers.Main) {
-            ChatModule.readMessages(CurrentUser.token, CurrentUser.user.userData.id, chat.userId)
+            ChatModule.readMessages(CurrentUser.token, chat.userId, CurrentUser.user.userData.id)
 
         }
     }

@@ -1,7 +1,5 @@
 package com.example.collart.MainPage.Home.Projects
 
-import com.example.collart.NetworkSystem.Tool
-
 enum class Experience(val stringValue: String){
     NO_EXPERIENCE("Нет опыта"),
     FROM_1_TO_3_YEARS("От 1 года до 3 лет"),
@@ -65,5 +63,4 @@ fun Experience.toStringValue(): String {
     }
 }
 
-data class Project(val id: String, val name: String, val image: String, val profession: String, val description: String, val experience: Experience, val programs: List<String>, val authorImage: String, val authorName: String, val authorId: String) {
-}
+data class Project(val id: String, val name: String, val image: String, val profession: String, val description: String, val experience: Experience, val programs: List<String>, val authorImage: String, val authorName: String, val authorId: String, val isActive: Boolean)

@@ -1,17 +1,31 @@
 package com.example.collart.MainPage.Home.Projects
 
+import FileAdapter
+import android.Manifest
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.collart.Auth.CurrentUser
 import com.example.collart.Chat.Chat
@@ -22,14 +36,18 @@ import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.OrderResponse
 import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
+import com.example.collart.Tools.FileConverter.FileConverter.Companion.extractFileNameFromUrl
 import com.example.collart.Tools.TimeConverter.TimeConverter
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ProjectActivity : AppCompatActivity() {
+class ProjectActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
+    private val REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 1001
 
     private lateinit var project: OrderResponse
+    private var urlFile: String = ""
 
     private lateinit var projectSpecialistFind: TextView
     private lateinit var authorImageView: ImageView
@@ -44,6 +62,17 @@ class ProjectActivity : AppCompatActivity() {
     private lateinit var joinProjectButton: Button
     private lateinit var sendMessageBtn: Button
     private lateinit var clickUserView: LinearLayout
+    private lateinit var recycleFiles: RecyclerView
+    private lateinit var projectAction: ShapeableImageView
+    private lateinit var btnAction: FrameLayout
+
+    private var isLiked = false;
+
+    private val downloadCompleteReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Toast.makeText(context, "Success download", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,9 +158,149 @@ class ProjectActivity : AppCompatActivity() {
         sendMessageBtn.setOnClickListener {
             onSendMessageClick()
         }
-        // TODO: add click listener write + add files placeholders
+
+        projectAction = findViewById(R.id.buttonActionProject)
+        btnAction = findViewById(R.id.buttonActionProjectContainer)
+
+        if (!project.order.isActive || project.order.owner.id == CurrentUser.user.userData.id){
+            joinProjectButton.visibility = GONE
+            sendMessageBtn.visibility = GONE
+        }
+
+        if (project.order.isActive && project.order.owner.id == CurrentUser.user.userData.id){
+            projectAction.setImageResource(R.drawable.delete)
+            btnAction.setOnClickListener {
+                deleteAction()
+            }
+        }
+        else{
+            projectAction.setImageResource(R.drawable.not_favorite)
+            checkFavorite()
+            btnAction.setOnClickListener{
+                likeAction()
+            }
+        }
+
+        recycleFiles = findViewById(R.id.recycleFileView)
+        recycleFiles.layoutManager = LinearLayoutManager(this)
+        val adapter = FileAdapter(project.order.files)
+        adapter.setOnItemClickListener(this)
+        recycleFiles.adapter = adapter
+
+        registerReceiver(
+            downloadCompleteReceiver,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        )
     }
 
+    private fun likeAction(){
+        GlobalScope.launch(Dispatchers.Main) {
+            if (isLiked){
+                val message = OrderModule.removeOrderFromFavorite(CurrentUser.token, project.order.id)
+                if (message != "ok"){
+                    Toast.makeText(this@ProjectActivity, message, Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    isLiked = false
+                }
+            }
+            else{
+                val message = OrderModule.addOrderToFavorite(CurrentUser.token, project.order.id)
+                if (message != "ok"){
+                    Toast.makeText(this@ProjectActivity, message, Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    isLiked = true
+                }
+            }
+            isLiked = OrderModule.isOrderFavorite(CurrentUser.token, project.order.id)
+            if (isLiked){
+                projectAction.setImageResource(R.drawable.favorite)
+            }
+            else{
+                projectAction.setImageResource(R.drawable.not_favorite)
+            }
+        }
+    }
+
+    private fun deleteAction(){
+        GlobalScope.launch(Dispatchers.Main) {
+            val message = OrderModule.deleteOrder(CurrentUser.token, project.order.id)
+            if (message == "ok"){
+                finish()
+            }
+        }
+    }
+
+    private fun checkFavorite(){
+        GlobalScope.launch(Dispatchers.Main) {
+            isLiked = OrderModule.isOrderFavorite(CurrentUser.token, project.order.id)
+            if (isLiked){
+                projectAction.setImageResource(R.drawable.favorite)
+            }
+            else{
+                projectAction.setImageResource(R.drawable.not_favorite)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister broadcast receiver
+        unregisterReceiver(downloadCompleteReceiver)
+    }
+
+    override fun onFileClick(url: String){
+        urlFile = url.replace("http://", "https://")
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION
+            )
+        } else {
+            GlobalScope.launch(Dispatchers.Main) {
+                downloadFile(urlFile, extractFileNameFromUrl(urlFile))
+                urlFile = ""
+            }
+        }
+
+    }
+
+    private fun downloadFile(url: String, fileName: String) {
+        val request = DownloadManager.Request(Uri.parse(url))
+            .setTitle("Downloading $fileName")
+            .setDescription("Download in progress")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+
+        val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.enqueue(request)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    downloadFile(urlFile, extractFileNameFromUrl(urlFile))
+                }
+            } else {
+                // Permission denied, show a message or handle accordingly
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+        urlFile = ""
+    }
     private fun onSendMessageClick(){
         GlobalScope.launch(Dispatchers.Main) {
 
@@ -183,35 +352,6 @@ class ProjectActivity : AppCompatActivity() {
             else{
                 Toast.makeText(this@ProjectActivity, response, Toast.LENGTH_LONG).show()
             }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.project_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.hide -> {
-                // Handle action item 1 click
-                return true
-            }
-            R.id.share -> {
-                // Handle action item 2 click
-                return true
-            }
-            R.id.like -> {
-                GlobalScope.launch(Dispatchers.Main) {
-                    val response = OrderModule.addOrderToFavorite(CurrentUser.token, project.order.id)
-                    if (response != "ok"){
-                        Toast.makeText(this@ProjectActivity, response, Toast.LENGTH_LONG).show()
-                        return@launch
-                    }
-                }
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
         }
     }
 }

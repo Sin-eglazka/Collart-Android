@@ -18,6 +18,10 @@ import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.http.Part
 import java.io.File
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import android.util.Base64
+
 
 data class SpecialistResponse(
     @SerializedName("user") val userData: UserData,
@@ -30,7 +34,8 @@ object UserModule {
     suspend fun loginUser(email: String, password: String): String? {
         return withContext(Dispatchers.IO) {
             try {
-                val request = LoginRequest(email, password)
+                val hashPas = hashPassword(password)
+                val request = LoginRequest(email, hashPas)
                 val response = apiService.login(request)
 
                 if (response.isSuccessful) {
@@ -57,7 +62,10 @@ object UserModule {
             try {
 
                 var experienceString = experience.toStringValue()
-                val request = RegisterUserRequest(email, password, repeatPassword, name, surname, description, userPhoto, cover, searchable, experienceString, skills, tools);
+
+                val hashPass = hashPassword(password)
+                val hashRepPas = hashPassword(repeatPassword)
+                val request = RegisterUserRequest(email, hashPass, hashRepPas, name, surname, description, userPhoto, cover, searchable, experienceString, skills, tools);
                 val response = apiService.register(request)
 
                 if (response.isSuccessful) {
@@ -209,7 +217,7 @@ object UserModule {
 
         var passwordRequestBody:RequestBody? = null
         if (passwordHash != null){
-            passwordRequestBody = RequestBody.create(MediaType.parse("text/plain"), passwordHash)
+            passwordRequestBody = RequestBody.create(MediaType.parse("text/plain"), hashPassword(passwordHash))
         }
 
 
@@ -272,5 +280,12 @@ object UserModule {
             val error = "Create order failed: ${e.message}"
             return error
         }
+    }
+
+    fun hashPassword(password: String ): String {
+        val salt = "9nNnI5dZm3c="
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hash = digest.digest((password + salt).toByteArray(StandardCharsets.UTF_8))
+        return Base64.encodeToString(hash, Base64.DEFAULT)
     }
 }

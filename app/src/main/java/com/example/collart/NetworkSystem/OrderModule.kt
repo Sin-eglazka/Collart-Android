@@ -77,7 +77,8 @@ object OrderModule {
                             authorImage = responseProject.order.owner.userPhoto,
                             programs = responseProject.tools,
                             authorName = responseProject.order.owner.surname + " " + responseProject.order.owner.name,
-                            authorId = responseProject.order.owner.id
+                            authorId = responseProject.order.owner.id,
+                            isActive = responseProject.order.isActive
                         )
                     } ?: emptyList()
 
@@ -115,7 +116,8 @@ object OrderModule {
                             authorImage = responseProject.order.owner.userPhoto,
                             programs = responseProject.tools,
                             authorName = responseProject.order.owner.surname + " " + responseProject.order.owner.name,
-                            authorId = responseProject.order.owner.id
+                            authorId = responseProject.order.owner.id,
+                            isActive = responseProject.order.isActive
                         )
                     } ?: emptyList()
 
@@ -153,7 +155,8 @@ object OrderModule {
                             authorImage = responseProject.order.owner.userPhoto,
                             programs = responseProject.tools,
                             authorName = responseProject.order.owner.surname + " " + responseProject.order.owner.name,
-                            authorId = responseProject.order.owner.id
+                            authorId = responseProject.order.owner.id,
+                            isActive = responseProject.order.isActive
                         )
                     } ?: emptyList()
 
@@ -191,7 +194,8 @@ object OrderModule {
                             authorImage = responseProject.order.owner.userPhoto,
                             programs = responseProject.tools,
                             authorName = responseProject.order.owner.surname + " " + responseProject.order.owner.name,
-                            authorId = responseProject.order.owner.id
+                            authorId = responseProject.order.owner.id,
+                            isActive = responseProject.order.isActive
                         )
                     } ?: emptyList()
 
@@ -210,7 +214,7 @@ object OrderModule {
         }
     }
 
-    suspend fun getOrder(token: String, orderId: String): OrderResponse?{
+    suspend fun getOrder(token: String, orderId: String): OrderResponse? {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getOrder("Bearer $token", orderId)
@@ -233,10 +237,90 @@ object OrderModule {
         }
     }
 
+    suspend fun isOrderFavorite(token: String, orderId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.isOrderFavorite("Bearer $token", orderId)
+
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        val isLike = response.body()!!
+                        if (isLike == "true"){
+                            true
+                        }
+                        else{
+                            false
+                        }
+                    }
+                    else{
+                        false
+                    }
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    false
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                false
+            }
+        }
+    }
+
     suspend fun addOrderToFavorite(token: String, orderId: String): String{
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.addOrderToFavorite("Bearer $token", orderId)
+
+                if (response.isSuccessful) {
+                    "ok"
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    reason
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                error
+            }
+        }
+    }
+
+    suspend fun removeOrderFromFavorite(token: String, orderId: String): String{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.removeOrderFromFavorite("Bearer $token", orderId)
+
+                if (response.isSuccessful) {
+                    "ok"
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    reason
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                error
+            }
+        }
+    }
+
+    suspend fun deleteOrder(token: String, orderId: String): String{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.deleteOrder("Bearer $token", orderId)
 
                 if (response.isSuccessful) {
                     "ok"

@@ -40,10 +40,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
         // Find views
-        forgetPasswordTextView = findViewById(R.id.forgetPasswordTextView)
-        googleButton = findViewById(R.id.googleBtn)
-        facebookButton = findViewById(R.id.facebookBtn)
-        appleIdButton = findViewById(R.id.appleBtn)
         loginEditText = findViewById(R.id.loginEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         authButton = findViewById(R.id.authButton)
@@ -57,27 +53,6 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        // Set click listeners for "Forget password?" and "Create new account" text
-        forgetPasswordTextView.setOnClickListener {
-            // Handle "Forget password?" click
-            // Add your logic to navigate to the forgot password screen
-        }
-
-        // Set click listeners for social login buttons
-        googleButton.setOnClickListener {
-            // Handle Google button click
-            // Add your logic for Google login
-        }
-
-        facebookButton.setOnClickListener {
-            // Handle Facebook button click
-            // Add your logic for Facebook login
-        }
-
-        appleIdButton.setOnClickListener {
-            // Handle Apple ID button click
-            // Add your logic for Apple ID login
-        }
 
         authButton.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {

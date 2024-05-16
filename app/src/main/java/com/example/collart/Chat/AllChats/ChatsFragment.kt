@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
@@ -52,21 +53,18 @@ class ChatsFragment : Fragment(), ChatsViewAdapter.OnChatClickListener{
         recyclerView = view.findViewById(R.id.recycleChatsView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-
-        startChatListUpdater()
         chatsAdapter = ChatsViewAdapter(chats, requireContext())
         chatsAdapter.setOnItemClickListener(this)
         recyclerView.adapter = chatsAdapter
+        startChatListUpdater()
     }
 
     private fun startChatListUpdater() {
         val handler = Handler(Looper.getMainLooper())
-        val executor = Executors.newSingleThreadExecutor()
 
-        executor.execute {
-
-            fixedRateTimer("chatListUpdater", false, 0L, 2000L) {
-                handler.post {
+        fixedRateTimer("chatListUpdater", false, 0L, 2000L) {
+            handler.post {
+                if (view != null) { // Check if fragment view is available
                     loadChats()
                 }
             }
@@ -74,12 +72,15 @@ class ChatsFragment : Fragment(), ChatsViewAdapter.OnChatClickListener{
     }
     private fun loadChats(){
         val token = CurrentUser.token
-        GlobalScope.launch(Dispatchers.Main) {
-            if (isAdded && context != null) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            try {
                 val updatedChatList = ChatModule.getMyChats(token, CurrentUser.user.userData.id)
                 chats.clear()
                 chats.addAll(updatedChatList)
                 chatsAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                // Handle exceptions if any
+                e.printStackTrace()
             }
         }
     }

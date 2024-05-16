@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,6 +46,7 @@ import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.PersonalPage.Portfolio.CreatePortfolioActivity
 import com.example.collart.PersonalPage.Portfolio.PortfolioViewAdapter
 import com.example.collart.MainPage.Home.Projects.ProjectActivity
+import com.example.collart.PersonalPage.Portfolio.PortfolioActivity
 import com.example.collart.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -91,9 +93,11 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
 
     private val editActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            GlobalScope.launch((Dispatchers.Main)) {
-                CurrentUser.user = UserModule.getCurrentUser(token)
-                fillViews()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                if (isAdded && context != null) {
+                    CurrentUser.user = UserModule.getCurrentUser(token)
+                    fillViews()
+                }
             }
         }
 
@@ -168,15 +172,21 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
         uploadActiveProjects()
 
         if (CurrentUser.user == null){
-            GlobalScope.launch(Dispatchers.Main) {
-                CurrentUser.user = UserModule.getCurrentUser(token)
-                if (CurrentUser.user == null){
-                    Toast.makeText(requireContext(), "Incorrect user credentials", Toast.LENGTH_LONG).show()
-                    val intent = Intent(requireContext(), MainPageActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                if (isAdded && context != null) {
+                    CurrentUser.user = UserModule.getCurrentUser(token)
+                    if (CurrentUser.user == null) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Incorrect user credentials",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        val intent = Intent(requireContext(), MainPageActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                    }
+                    fillViews()
                 }
-                fillViews()
             }
         }
         else{
@@ -235,23 +245,26 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
                 R.id.editBackground -> {
                     pickImage.launch("image/*")
                     if (image != null) {
-                        GlobalScope.launch((Dispatchers.Main)) {
-                            val response = UserModule.updateUser(
-                                token,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                image
-                            )
-                            if (response != "ok") {
-                                Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                            if (isAdded && context != null) {
+                                val response = UserModule.updateUser(
+                                    token,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    image
+                                )
+                                if (response != "ok") {
+                                    Toast.makeText(requireContext(), response, Toast.LENGTH_LONG)
+                                        .show()
+                                }
                             }
                         }
                     }
@@ -260,30 +273,30 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
                 R.id.editAvatar -> {
                     pickImage.launch("image/*")
                     if (image != null) {
-                        GlobalScope.launch((Dispatchers.Main)) {
-                            val response = UserModule.updateUser(
-                                token,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                image,
-                                null
-                            )
-                            if (response != "ok") {
-                                Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                            if (isAdded && context != null) {
+                                val response = UserModule.updateUser(
+                                    token,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    image,
+                                    null
+                                )
+
+                                if (response != "ok") {
+                                    Toast.makeText(requireContext(), response, Toast.LENGTH_LONG)
+                                        .show()
+                                }
                             }
                         }
                     }
-                    true
-                }
-                R.id.share -> {
-                    // Handle action option 2 click
                     true
                 }
                 R.id.logout -> {
@@ -378,25 +391,27 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
     }
 
     private fun uploadActiveProjects(){
-        GlobalScope.launch(Dispatchers.Main) {
-            activeProjects = OrderModule.getMyOrders(token, user.userData.id).toMutableList()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
-                activeProjectsAdapter = ActiveProjectsAdapter(
-                    requireContext(),
-                    activeProjects,
-                    ProjectType.ActiveProject
-                )
-                activeProjectsAdapter.setOnItemClickListener(this@ProfileFragment)
-                projectsRecycleView.layoutManager = LinearLayoutManager(requireContext())
-                projectsRecycleView.adapter = activeProjectsAdapter
+                activeProjects = OrderModule.getMyOrders(token, user.userData.id).toMutableList()
+                if (isAdded && context != null) {
+                    activeProjectsAdapter = ActiveProjectsAdapter(
+                        requireContext(),
+                        activeProjects,
+                        ProjectType.ActiveProject
+                    )
+                    activeProjectsAdapter.setOnItemClickListener(this@ProfileFragment)
+                    projectsRecycleView.layoutManager = LinearLayoutManager(requireContext())
+                    projectsRecycleView.adapter = activeProjectsAdapter
+                }
             }
         }
     }
 
     private fun uploadFavoritesProjects(){
-        GlobalScope.launch(Dispatchers.Main) {
-            favoriteProjects = OrderModule.getMyFavoriteOrders(token, user.userData.id).toMutableList()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
+            favoriteProjects = OrderModule.getMyFavoriteOrders(token, user.userData.id).toMutableList()
                 activeProjectsAdapter = ActiveProjectsAdapter(
                     requireContext(),
                     favoriteProjects,
@@ -410,9 +425,9 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
     }
 
     private fun uploadCollaborationProjects(){
-        GlobalScope.launch(Dispatchers.Main) {
-            collaborationProjects = OrderModule.getMyCollaborationOrders(token, user.userData.id).toMutableList()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
+            collaborationProjects = OrderModule.getMyCollaborationOrders(token, user.userData.id).toMutableList()
                 activeProjectsAdapter = ActiveProjectsAdapter(
                     requireContext(),
                     collaborationProjects,
@@ -426,9 +441,10 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
     }
 
     private fun uploadPortfolioProjects(){
-        GlobalScope.launch(Dispatchers.Main) {
-            portfolios = PortfolioModule.getMyPortfolios(token, user.userData.id).toMutableList()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
+            portfolios = PortfolioModule.getMyPortfolios(token, user.userData.id).toMutableList()
+
                 val adapter = PortfolioViewAdapter(
                     requireContext(),
                     portfolios
@@ -469,24 +485,43 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
             }
             else -> return
         }
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            if (isAdded && context != null) {
 
-            val projectResponse = OrderModule.getOrder(token , projectId)
-            if (projectResponse == null){
-                Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
-                return@launch
+                val projectResponse = OrderModule.getOrder(token, projectId)
+                if (projectResponse == null) {
+                    Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val context: Context? = activity
+
+                val intent = Intent(context, ProjectActivity::class.java)
+
+                intent.putExtra("project", projectResponse)
+
+                context?.startActivity(intent)
             }
-            val context: Context? = activity
-
-            val intent = Intent(context, ProjectActivity::class.java)
-
-            intent.putExtra("project", projectResponse)
-
-            context?.startActivity(intent)
         }
     }
 
     override fun onItemClick(position: Int) {
-        // TODO: open portfolio activity
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            if (isAdded && context != null) {
+
+                val portfolioResponse = PortfolioModule.getPortfolio(token, portfolios[position].id)
+                if (portfolioResponse == null) {
+                    Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val context: Context? = activity
+
+                val intent = Intent(context, PortfolioActivity::class.java)
+
+                intent.putExtra("portfolio", portfolioResponse)
+
+                context?.startActivity(intent)
+            }
+        }
     }
 }

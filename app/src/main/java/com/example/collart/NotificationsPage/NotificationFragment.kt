@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
@@ -145,7 +146,7 @@ class NotificationFragment : Fragment(), OnInteractionClickListener {
 
     private fun loadResponsesOnMyProjects(){
         val token = CurrentUser.token
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
                 responses = InteractionModule.getResponsesOnMyProjects(token).toMutableList()
                 filterByStatus(spinner.selectedItemPosition)
@@ -155,7 +156,7 @@ class NotificationFragment : Fragment(), OnInteractionClickListener {
 
     private fun loadInvitesOnOtherProjects(){
         val token = CurrentUser.token
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
                 invites = InteractionModule.getInvitesOnOtherProjects(token).toMutableList()
                 filterByStatus(spinner.selectedItemPosition)
@@ -164,27 +165,29 @@ class NotificationFragment : Fragment(), OnInteractionClickListener {
     }
 
     override fun onAcceptClick(interactionId: String, getterId: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val token = CurrentUser.token
-            val response = InteractionModule.acceptInteraction(token, interactionId, getterId)
-            if (response){
-                Toast.makeText(context, "Invite accepted", Toast.LENGTH_LONG).show()
-            }
-            else{
-                Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
+                val token = CurrentUser.token
+                val response = InteractionModule.acceptInteraction(token, interactionId, getterId)
+                if (response) {
+                    Toast.makeText(context, "Invite accepted", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     override fun onRejectClick(interactionId: String, getterId: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val token = CurrentUser.token
-            val response = InteractionModule.rejectInteraction(token, interactionId, getterId)
-            if (response){
-                Toast.makeText(context, "Invite rejected", Toast.LENGTH_LONG).show()
-            }
-            else{
-                Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
+                val token = CurrentUser.token
+                val response = InteractionModule.rejectInteraction(token, interactionId, getterId)
+                if (response) {
+                    Toast.makeText(context, "Invite rejected", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

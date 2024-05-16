@@ -2,24 +2,15 @@ package com.example.collart.MainPage.Home.Specialists.UserPage
 
 import ActiveProjectsAdapter
 import ProjectType
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,13 +20,13 @@ import com.example.collart.Auth.User
 import com.example.collart.Chat.Chat
 import com.example.collart.Chat.ChatActivity
 import com.example.collart.MainPage.Home.Projects.Project
+import com.example.collart.MainPage.Home.Projects.ProjectActivity
 import com.example.collart.NetworkSystem.InteractionModule
 import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.Portfolio
 import com.example.collart.NetworkSystem.PortfolioModule
+import com.example.collart.PersonalPage.Portfolio.PortfolioActivity
 import com.example.collart.PersonalPage.Portfolio.PortfolioViewAdapter
-import com.example.collart.MainPage.Home.Projects.ProjectActivity
-import com.example.collart.NetworkSystem.UserModule
 import com.example.collart.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +62,7 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setTitle("")
+        supportActionBar?.title = ""
 
         toolbar.setNavigationOnClickListener {
             onBackPressed() // Handle back button click
@@ -95,8 +86,8 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
         userProfession = findViewById(R.id.userProfessionView)
         userEmailView = findViewById(R.id.userEmailView)
 
-        val urlImage: String = specialist.userData.cover.replace("http://", "https://")!!
-        val urlAvatar = specialist.userData.userPhoto.replace("http://", "https://")!!
+        val urlImage: String = specialist.userData.cover.replace("http://", "https://")
+        val urlAvatar = specialist.userData.userPhoto.replace("http://", "https://")
 
         Glide.with(this)
             .load(urlImage)
@@ -114,12 +105,12 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
 
         usernameView.text = specialist.userData.name + " " + specialist.userData.surname
 
-        var skillsText: String = ""
+        var skillsText = ""
 
         specialist.skills.forEach{
             skillsText += it.nameRu + ", "
         }
-        if (specialist.skills.size > 0){
+        if (specialist.skills.isNotEmpty()){
             skillsText = skillsText.dropLast(2)
         }
         userProfession.text = skillsText
@@ -289,29 +280,24 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
     }
 
     override fun onItemClick(position: Int) {
-        // TODO: open portfolio activity
+        GlobalScope.launch(Dispatchers.Main) {
+
+            val portfolioResponse = PortfolioModule.getPortfolio(CurrentUser.token, portfolios[position].id)
+            if (portfolioResponse == null){
+                Toast.makeText(this@UserPageActivity, "Error on server", Toast.LENGTH_LONG).show()
+                return@launch
+            }
+
+            val intent = Intent(this@UserPageActivity, PortfolioActivity::class.java)
+
+            intent.putExtra("portfolio", portfolioResponse)
+
+            startActivity(intent)
+        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.user_menu, menu)
 
-        val menuItem = menu?.findItem(R.id.block)
-        // Change the text color of the menu item
-        // Create a SpannableString to set the text color
-        val spannable = SpannableString(menuItem?.title)
-        spannable.setSpan(
-            ForegroundColorSpan(Color.RED), // Set your desired color
-            0, // Start index of the span
-            spannable.length, // End index of the span (length of the text)
-            0 // No flags
-        )
-
-        // Set the modified SpannableString back to the menu item
-        menuItem?.title = spannable
-        return true
-    }
-
-    fun onInviteClick() {
+    private fun onInviteClick() {
         val dialog = BottomSheetDialog(this)
 
         val view = layoutInflater.inflate(R.layout.choose_project_sheet, null)
@@ -332,7 +318,7 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
             if (adapter.selectedItemPosition != RecyclerView.NO_POSITION){
                 val index = adapter.selectedItemPosition
                 if (index < myProjects.size){
-                    val userId: String = CurrentUser.user?.userData?.id.toString()
+                    val userId: String = CurrentUser.user.userData.id
                     GlobalScope.launch(Dispatchers.Main) {
                         val response = InteractionModule.createInteraction(
                             CurrentUser.token,
@@ -360,22 +346,4 @@ class UserPageActivity : AppCompatActivity(), ActiveProjectsAdapter.OnItemClickL
         dialog.show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            /*R.id.action_item1 -> {
-                // Handle action item 1 click
-                return true
-            }
-            R.id.action_item2 -> {
-                // Handle action item 2 click
-                return true
-            }
-            R.id.action_item3 -> {
-                // Handle action item 3 click
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)*/
-        }
-        return true
-    }
 }

@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var etName: EditText
-    private lateinit var etLogin: EditText
+    private lateinit var etSurname: EditText
     private lateinit var etMail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etRepeatPassword: EditText
@@ -59,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
         etName = findViewById(com.example.collart.R.id.etName)
-        etLogin = findViewById(com.example.collart.R.id.etLogin)
+        etSurname = findViewById(com.example.collart.R.id.etSurname)
         etMail = findViewById(com.example.collart.R.id.etMail)
         etPassword = findViewById(com.example.collart.R.id.etPassword)
         etRepeatPassword = findViewById(com.example.collart.R.id.etRepeatPassword)
@@ -87,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
 
         editTexts = listOf(
             etName,
-            etLogin,
+            etSurname,
             etMail,
             etPassword,
             etRepeatPassword
@@ -177,20 +177,9 @@ class RegisterActivity : AppCompatActivity() {
             tvError.visibility = GONE
             tvError.text = messageError
 
+            var name: String = etName.text.toString()
+            var surname: String = etSurname.text.toString()
 
-            val parts: List<String> =  etName.text.toString().trim().split(" ")
-
-            var name: String = ""
-            var surname: String = ""
-            if (parts.size >= 2){
-                name = parts[0]
-                surname = parts[1]
-            }
-            else{
-                name = etName.text.toString()
-            }
-            // TODO: Perform registration logic here
-            //TODO: Get request from server
 
             GlobalScope.launch(Dispatchers.Main) {
                 if (!NetworkClient.isNetworkAvailable(this@RegisterActivity)){

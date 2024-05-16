@@ -9,22 +9,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="24dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+       >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarProjectPage"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            app:menu="@menu/project_menu"
+            android:layout_height="40dp"
             app:popupTheme="@style/AppTheme.PopupMenu"
             android:background="@color/transparent"
-            app:theme="@style/AppTheme.Toolbar"
-            />
+            app:theme="@style/AppTheme.Toolbar">
+            <FrameLayout
+                android:id="@+id/buttonActionProjectContainer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true">
+            <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/buttonActionProject"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:clickable="false"
+                android:focusable="false" />
+            </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,45 +152,50 @@
                     android:layout_marginBottom="16dp"
                     android:text="Дата" />
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleFileView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/sendMessageProjectBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/secondary_button"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="Написать"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="8dp"
-                        android:textAllCaps="false"
-                        android:textSize="16sp"
-                        android:textColor="@color/purple"
-                        android:textStyle="bold"/>
-
-                    <Button
-                        android:id="@+id/joinProjectButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/primary_button"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="16dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="Откликнуться" />
-                </LinearLayout>
+                    />
             </LinearLayout>
         </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
+            <Button
+                android:id="@+id/sendMessageProjectBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/secondary_button"
+                android:fontFamily="@font/roboto_regular"
+                android:text="Написать"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="8dp"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textColor="@color/purple"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/joinProjectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/primary_button"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Откликнуться" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

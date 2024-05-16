@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.Serializable
 
 data class Interaction(
     @SerializedName("status") val status: String,
@@ -16,7 +17,7 @@ data class Interaction(
 
 data class Object(
     @SerializedName("id") val id: String
-)
+) : Serializable
 
 data class PostInteraction(
     @SerializedName("senderID") val senderId: String,

@@ -12,8 +12,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collart.Auth.CurrentUser
@@ -59,6 +61,8 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     private lateinit var projectAdapter: ProjectsViewAdapter
     private lateinit var specAdapter: SpecialistsViewAdapter
 
+    private lateinit var filterActivityResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,19 +74,6 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
-    }
-
-    private val filterActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            filterSkills = data?.getStringArrayExtra("skills") as Array<String>
-            filterTools = data.getStringArrayExtra("tools") as Array<String>
-            filterExperience = data.getStringArrayExtra("experiences") as Array<String>
-            getSpecialists()
-            getProjects()
-
-
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,6 +89,17 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         filterButton.setOnClickListener {
             val intent = Intent(requireContext(), FiltersActivity::class.java)
             filterActivityResultLauncher.launch(intent)
+        }
+
+        filterActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                filterSkills = data?.getStringArrayExtra("skills") as Array<String>
+                filterTools = data.getStringArrayExtra("tools") as Array<String>
+                filterExperience = data.getStringArrayExtra("experiences") as Array<String>
+                getSpecialists()
+                getProjects()
+            }
         }
 
         //first initialization
@@ -164,9 +166,11 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
                 }
                 else{
                     if (projectBar.isChecked){
+                        searchProjects.clear()
                         searchProjects.addAll(projects)
                     }
                     if (specialistBar.isChecked){
+                        searchSpecialists.clear()
                         searchSpecialists.addAll(specialists)
                     }
                 }
@@ -177,38 +181,43 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     }
 
     override fun onProjectClick(position: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
 
-            val projectResponse = OrderModule.getOrder(CurrentUser.token ,projects[position].id)
-            if (projectResponse == null){
-                Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
-                return@launch
+                val projectResponse = OrderModule.getOrder(CurrentUser.token, projects[position].id)
+                if (projectResponse == null) {
+                    Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val context: Context? = activity
+
+                val intent = Intent(context, ProjectActivity::class.java)
+
+                intent.putExtra("project", projectResponse)
+
+                context?.startActivity(intent)
             }
-            val context: Context? = activity
-
-            val intent = Intent(context, ProjectActivity::class.java)
-
-            intent.putExtra("project", projectResponse)
-
-            context?.startActivity(intent)
         }
     }
 
     override fun onSpecialistClick(position: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
 
-            val userResponse = UserModule.getSpecialist(CurrentUser.token ,specialists[position].id)
-            if (userResponse == null){
-                Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
-                return@launch
+                val userResponse =
+                    UserModule.getSpecialist(CurrentUser.token, specialists[position].id)
+                if (userResponse == null) {
+                    Toast.makeText(requireContext(), "Error on server", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val context: Context? = activity
+
+                val intent = Intent(context, UserPageActivity::class.java)
+
+                intent.putExtra("Specialist", userResponse)
+
+                context?.startActivity(intent)
             }
-            val context: Context? = activity
-
-            val intent = Intent(context, UserPageActivity::class.java)
-
-            intent.putExtra("Specialist", userResponse)
-
-            context?.startActivity(intent)
         }
     }
 
@@ -222,10 +231,18 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
         var adapter = ActiveProjectsAdapter(requireContext(), myProjects, ProjectType.ChooseActiveProject)
         recycleMyProjects.adapter = adapter
 
-        GlobalScope.launch(Dispatchers.Main) {
-            myProjects = OrderModule.getMyOrders(CurrentUser.token, CurrentUser.user.userData.id).toMutableList()
-            adapter = ActiveProjectsAdapter(requireContext(), myProjects, ProjectType.ChooseActiveProject)
-            recycleMyProjects.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
+                myProjects =
+                    OrderModule.getMyOrders(CurrentUser.token, CurrentUser.user.userData.id)
+                        .toMutableList()
+                adapter = ActiveProjectsAdapter(
+                    requireContext(),
+                    myProjects,
+                    ProjectType.ChooseActiveProject
+                )
+                recycleMyProjects.adapter = adapter
+            }
         }
 
         val btnAdd = view.findViewById<Button>(R.id.addButton)
@@ -234,20 +251,22 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
                 val index = adapter.selectedItemPosition
                 if (index < myProjects.size){
                     val userId: String = CurrentUser.user?.userData?.id.toString()
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val response = InteractionModule.createInteraction(
-                            CurrentUser.token,
-                            userId,
-                            specialists[position].id,
-                            myProjects[index].id
-                        )
-                        if (response == "ok"){
-                            Toast.makeText(requireContext(), "Invite send", Toast.LENGTH_LONG).show()
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                        if (isAdded && context != null) {
+                            val response = InteractionModule.createInteraction(
+                                CurrentUser.token,
+                                userId,
+                                specialists[position].id,
+                                myProjects[index].id
+                            )
+                            if (response == "ok") {
+                                Toast.makeText(requireContext(), "Invite send", Toast.LENGTH_LONG)
+                                    .show()
+                            } else {
+                                Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+                            }
+                            dialog.dismiss()
                         }
-                        else{
-                            Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
-                        }
-                        dialog.dismiss()
                     }
                 }
             }
@@ -264,25 +283,26 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
     override fun onJoinButtonClick(position: Int) {
 
         val userId: String = CurrentUser.user?.userData?.id.toString()
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = InteractionModule.createInteraction(
-                CurrentUser.token,
-                userId,
-                projects[position].authorId,
-                projects[position].id
-            )
-            if (response == "ok"){
-                Toast.makeText(requireContext(), "Request send", Toast.LENGTH_LONG).show()
-            }
-            else{
-                Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded && context != null) {
+                val response = InteractionModule.createInteraction(
+                    CurrentUser.token,
+                    userId,
+                    projects[position].authorId,
+                    projects[position].id
+                )
+                if (response == "ok") {
+                    Toast.makeText(requireContext(), "Request send", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     private fun getProjects() {
         val token = CurrentUser.token
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
                 val orders = OrderModule.getAllOrders(token, filterSkills, filterTools, filterExperience)
                     projects = orders.toMutableList()
@@ -296,7 +316,7 @@ class HomeFragment : Fragment(), ProjectsViewAdapter.OnItemClickListener, Specia
 
     private fun getSpecialists(){
         val token = CurrentUser.token
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (isAdded && context != null) {
                 val specialistsResponse = UserModule.getAllSpecialist(token, filterSkills, filterTools, filterExperience)
                     specialists = specialistsResponse.toMutableList()

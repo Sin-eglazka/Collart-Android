@@ -8,6 +8,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.File
+import java.io.Serializable
 
 data class Portfolio(
     @SerializedName("name") val name: String,
@@ -16,7 +17,7 @@ data class Portfolio(
     @SerializedName("files") val files: List<String>,
     @SerializedName("id") val id: String,
     @SerializedName("user") val user: Object
-)
+) : Serializable
 
 object PortfolioModule {
     suspend fun uploadProject(
@@ -94,6 +95,29 @@ object PortfolioModule {
                 e.printStackTrace()
                 val error = "Register failed: ${e.message}"
                 emptyList()
+            }
+        }
+    }
+
+    suspend fun getPortfolio(token: String, projectId: String): Portfolio?{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = NetworkClient.apiService.getPortfolio("Bearer $token", projectId)
+
+                if (response.isSuccessful) {
+                    response.body()
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    null
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                null
             }
         }
     }

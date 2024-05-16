@@ -8,16 +8,20 @@ import com.example.collart.Chat.Message
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.Response
+import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Streaming
+import retrofit2.http.Url
 
 
 interface ApiService {
@@ -98,6 +102,13 @@ interface ApiService {
     @GET("orders/myOrders/{orderId}")
     suspend fun getOrder(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<OrderResponse>
 
+    @GET("orders/isOrderInFavorites/{orderId}")
+    suspend fun isOrderFavorite(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<String>
+
+    @DELETE("orders/{orderId}")
+    suspend fun deleteOrder(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<Void>
+
+
     // specialists module
 
     @Headers("Content-Type: application/json")
@@ -158,6 +169,10 @@ interface ApiService {
     @GET("tab/portfolio/{userId}")
     suspend fun getPortfolios(@Header("Authorization") authorization: String, @Path("userId") userId: String): Response<List<Portfolio>>
 
+    @GET("projects/{projectId}")
+    suspend fun getPortfolio(@Header("Authorization") authorization: String, @Path("projectId") projectId: String): Response<Portfolio>
+
+
     // favorite module
 
     @GET("tab/favorites/{userId}")
@@ -165,6 +180,9 @@ interface ApiService {
 
     @POST("orders/addOrderToFavorite/{orderId}")
     suspend fun addOrderToFavorite(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<Void>
+
+    @DELETE("orders/removeOrderFromFavorite/{orderId}")
+    suspend fun removeOrderFromFavorite(@Header("Authorization") authorization: String, @Path("orderId") orderId: String): Response<Void>
 
 
     // chat module
@@ -200,6 +218,7 @@ interface ApiService {
         @Part("senderID") senderID: RequestBody,
         @Part("receiverID") receiverID: RequestBody,
     ): Response<Void>
+
 }
 
 data class LoginResponse(val token: String)

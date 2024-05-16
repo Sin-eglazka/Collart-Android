@@ -31,18 +31,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/inactive_edittext"
-                    android:hint="Имя и фамилия"
+                    android:hint="Имя"
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp" />
 
                 <EditText
-                    android:id="@+id/etLogin"
+                    android:id="@+id/etSurname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/inactive_edittext"
-                    android:hint="Логин"
+                    android:hint="Фамилия"
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp" />

@@ -165,29 +165,48 @@ class EditProfileActivity : AppCompatActivity() {
             experience = experienceString
         }
 
-        // TODO: Add checks for tools and skills
+        var tools: MutableList<String>? = emptyList<String>().toMutableList()
+        for (j in programsList.indices) {
+
+            tools?.add(programs[programsList[j]])
+        }
+
+        var skills: MutableList<String>? = listOf<String>(firstProfessionView.text.toString()).toMutableList()
+        if (isSecondaryProfessionAdded){
+            var secondSkill = secondProfessionView.text.toString()
+            if (secondSkill != ""){
+                skills?.add(secondSkill)
+            }
+        }
+
+        var isSkillChange = false;
+        if (user.skills.isNotEmpty() && skills?.get(0) != user.skills[0].nameRu && skills?.get(0) != ""){
+            isSkillChange = true;
+        }
+        if (isSecondaryProfessionAdded && (user.skills.size < 2 || user.skills[1].nameRu != skills?.get(1))){
+            isSkillChange = true;
+        }
+
+        if (skills != null) {
+            if (skills.size == 1 && skills[0] == ""){
+                skills = null
+            }
+        }
+        if (tools != null){
+            if (tools.isEmpty()){
+                tools = null
+            }
+        }
+
         if (email == null && name == null && surname == null
-            && experience == null && searchable == null && description == null && firstProfessionView.text.toString() == "" && programsList.size == 0){
+            && experience == null && searchable == null && description == null && firstProfessionView.text.toString() == "" && programsList.size == 0 && password == null
+            && !isSkillChange && programsList.isEmpty()){
             Toast.makeText(this@EditProfileActivity, "No fields are changed", Toast.LENGTH_LONG).show()
             return
         }
 
-        val tools: MutableList<String> = emptyList<String>().toMutableList()
-        for (j in programsList.indices) {
-
-            tools.add(programs[programsList[j]])
-        }
-
-        var skills: MutableList<String> = listOf<String>(firstProfessionView.text.toString()).toMutableList()
-        if (isSecondaryProfessionAdded){
-            var secondSkill = secondProfessionView.text.toString()
-            if (secondSkill != ""){
-                skills.add(secondSkill)
-            }
-        }
 
 
-        // TODO: add hash
         GlobalScope.launch((Dispatchers.Main)) {
             val response = UserModule.updateUser(CurrentUser.token, email, name, surname, searchable, experience, password, description, tools, skills, null, null)
             if (response == "ok"){
