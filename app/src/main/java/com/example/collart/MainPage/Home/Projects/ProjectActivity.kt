@@ -211,7 +211,6 @@ class ProjectActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
                     isLiked = true
                 }
             }
-            isLiked = OrderModule.isOrderFavorite(CurrentUser.token, project.order.id)
             if (isLiked){
                 projectAction.setImageResource(R.drawable.favorite)
             }
@@ -232,12 +231,14 @@ class ProjectActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
 
     private fun checkFavorite(){
         GlobalScope.launch(Dispatchers.Main) {
-            isLiked = OrderModule.isOrderFavorite(CurrentUser.token, project.order.id)
-            if (isLiked){
+            val like = OrderModule.isOrderFavorite(CurrentUser.token, project.order.id)
+            if (like){
                 projectAction.setImageResource(R.drawable.favorite)
+                isLiked = true
             }
             else{
                 projectAction.setImageResource(R.drawable.not_favorite)
+                isLiked = false
             }
         }
     }

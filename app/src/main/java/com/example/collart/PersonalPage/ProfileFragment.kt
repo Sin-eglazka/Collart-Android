@@ -20,6 +20,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -82,24 +83,9 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
         }
     }
 
-    private val startChildActivityForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                uploadPortfolioProjects()
-            }
-        }
+    private lateinit var startChildActivityForResult: ActivityResultLauncher<Intent>
 
-    private val editActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                if (isAdded && context != null) {
-                    user = UserModule.getCurrentUser(token)
-                    fillViews()
-                }
-            }
-        }
-
-    }
+    private lateinit var editActivityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -162,6 +148,23 @@ class ProfileFragment : Fragment(), ActiveProjectsAdapter.OnItemClickListener, P
         addPortfolioBtn = view.findViewById(R.id.addPortfolioBtn)
         projectsRecycleView = view.findViewById(R.id.projectsView)
         projectsRecycleView.layoutManager = LinearLayoutManager(context)
+
+        startChildActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                uploadPortfolioProjects()
+            }
+        }
+        editActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                    if (isAdded && context != null) {
+                        user = UserModule.getCurrentUser(token)
+                        fillViews()
+                    }
+                }
+            }
+
+        }
 
         uploadActiveProjects()
 

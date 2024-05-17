@@ -1,5 +1,6 @@
 package com.example.collart.Auth
 
+import TokenManager
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -66,6 +67,7 @@ class LoginActivity : AppCompatActivity() {
                     CurrentUser.token = token
                     CurrentUser.user = UserModule.getCurrentUser(token)
                     val intent = Intent(this@LoginActivity, MainPageActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                     finish()
                 } else {
