@@ -121,4 +121,27 @@ object PortfolioModule {
             }
         }
     }
+
+    suspend fun deletePortfolio(token: String, projectId: String): String{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = NetworkClient.apiService.deleteProject("Bearer $token", projectId)
+
+                if (response.isSuccessful) {
+                    "ok"
+
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val reason = errorJson.optString("reason")
+                    reason
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                val error = "Register failed: ${e.message}"
+                error
+            }
+        }
+    }
 }

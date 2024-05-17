@@ -169,6 +169,9 @@ interface ApiService {
     @GET("projects/{projectId}")
     suspend fun getPortfolio(@Header("Authorization") authorization: String, @Path("projectId") projectId: String): Response<Portfolio>
 
+    @DELETE("projects/{projectId}")
+    suspend fun deleteProject(@Header("Authorization") authorization: String, @Path("projectId") projectId: String): Response<Void>
+
 
     // favorite module
 

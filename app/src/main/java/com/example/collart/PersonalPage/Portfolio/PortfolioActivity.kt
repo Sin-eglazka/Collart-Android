@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -21,9 +22,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.collart.Auth.CurrentUser
+import com.example.collart.NetworkSystem.OrderModule
 import com.example.collart.NetworkSystem.Portfolio
+import com.example.collart.NetworkSystem.PortfolioModule
 import com.example.collart.R
 import com.example.collart.Tools.FileConverter.FileConverter
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -38,6 +43,8 @@ class PortfolioActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
     private lateinit var imageView: ImageView
     private lateinit var descriptionView: TextView
     private lateinit var recycleFiles: RecyclerView
+    private lateinit var projectAction: ShapeableImageView
+    private lateinit var btnAction: FrameLayout
 
     private val downloadCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -87,12 +94,27 @@ class PortfolioActivity : AppCompatActivity(), FileAdapter.OnItemClickListener {
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         )
 
+        projectAction = findViewById(R.id.buttonActionPortfolio)
+        btnAction = findViewById(R.id.buttonActionPortfolioContainer)
+        btnAction.setOnClickListener {
+            deleteAction()
+        }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         // Unregister broadcast receiver
         unregisterReceiver(downloadCompleteReceiver)
+    }
+
+    private fun deleteAction(){
+        GlobalScope.launch(Dispatchers.Main) {
+            val message = PortfolioModule.deletePortfolio(CurrentUser.token, portfolio.id)
+            if (message == "ok"){
+                finish()
+            }
+        }
     }
 
     override fun onFileClick(url: String){
